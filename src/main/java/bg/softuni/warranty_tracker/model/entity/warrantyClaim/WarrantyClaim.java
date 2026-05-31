@@ -18,8 +18,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
 import jakarta.persistence.Entity;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import jakarta.validation.constraints.NotEmpty;
+import bg.softuni.warranty_tracker.constant.ValidationMessages;
 
 @Table(name = "warranty_claims")
 @NoArgsConstructor
@@ -34,13 +34,16 @@ public class WarrantyClaim {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotEmpty(message = ValidationMessages.STATUS_REQUIRED)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WarrantyClaimStatus status;
 
+    @NotEmpty(message = ValidationMessages.DATE_SENT_REQUIRED)
     @Column(nullable = false)
     private LocalDate dateSent;
 
+    @NotEmpty(message = ValidationMessages.NOTES_REQUIRED)
     @Column(nullable = true)
     private String notes;
 

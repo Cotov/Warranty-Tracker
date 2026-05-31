@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import bg.softuni.warranty_tracker.constant.ValidationMessages;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,18 +19,16 @@ import jakarta.validation.constraints.NotEmpty;
 @Embeddable
 public class Contact {
 
-    @NotEmpty(message = "Email is required")
+    @NotEmpty(message = ValidationMessages.EMAIL_REQUIRED)
     @Email
     @Column(nullable = false)
     private String email;
 
-    @NotEmpty
+    @NotEmpty(message = ValidationMessages.PHONE_REQUIRED)
     @Column(nullable = false)
     private String phone;
 
-    @NotEmpty
+    @NotEmpty(message = ValidationMessages.WEBSITE_REQUIRED)
     @Column(nullable = false)
     private String website;
-
-    //todo create a file with constant messages
 }
