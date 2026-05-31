@@ -1,0 +1,38 @@
+:root {
+    --bg-color: #090d16;
+    --card-bg: #111827;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --secondary: #a855f7;
+    --accent: #f43f5e;
+    --primary-glow: rgba(56, 189, 248, 0.12);
+    --border-color: #1f2937;
+    --border-focus: #0ea5e9;
+    --error-color: #f43f5e;
+    --error-bg: rgba(244, 63, 94, 0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Consolas', 'Fira Code', Monaco, 'Courier New', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 90px 20px 40px 20px;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.006) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.006) 1px, transparent 1px);
+    background-size: 20px 20px;
+}

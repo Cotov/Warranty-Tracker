@@ -1,0 +1,46 @@
+package bg.softuni.warranty_tracker.service.user;
+
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+import bg.softuni.warranty_tracker.repository.user.UserRepository;
+import bg.softuni.warranty_tracker.constant.ErrorMessages;
+import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
+import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import bg.softuni.warranty_tracker.mapper.user.UserMapper;
+import bg.softuni.warranty_tracker.model.entity.user.User;
+import lombok.extern.slf4j.Slf4j;
+import bg.softuni.warranty_tracker.constant.LogMessages;
+
+@Slf4j
+@Service
+@Transactional
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
+
+    public UserDto register(UserRegisterRequest userRegisterRequest) {
+
+        userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {
+            throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
+        });
+
+        String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword());
+        User user = userMapper.toUser(userRegisterRequest, encodedPassword);
+
+        userRepository.save(user);
+        log.info(LogMessages.USER_REGISTERED_SUCCESSFULLY, user.getUsername());
+        
+        return userMapper.toUserDto(user);
+    }
+
+}
