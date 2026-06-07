@@ -14,8 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
-
-
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -34,15 +32,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ModelAndView register(@Valid @ModelAttribute UserRegisterRequest userRegisterRequest, BindingResult bindingResult) {
+    public ModelAndView register(@Valid @ModelAttribute UserRegisterRequest userRegisterRequest,
+            BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("users/register"); // but with error messages
             return modelAndView;
         }
-        UserDto userDto = userService.register(userRegisterRequest); // why return it? 
-        modelAndView.setViewName("redirect:/users/login"); //redirects where?
+        UserDto userDto = userService.register(userRegisterRequest); // why return it?
+        modelAndView.setViewName("redirect:/users/login"); // redirects where?
         return modelAndView;
     }
 
@@ -57,15 +56,12 @@ public class UserController {
     public ModelAndView login(@Valid @ModelAttribute UserLoginRequest userLoginRequest, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView("users/login");
         if (bindingResult.hasErrors()) {
-            return modelAndView; // how does this keep the errors from the failed login? 
+            return modelAndView; // how does this keep the errors from the failed login?
         }
 
-        UserDto userDto = userService.login(userLoginRequest); //why return? 
-        modelAndView.setViewName("redirect:/home");
-        
+        UserDto userDto = userService.login(userLoginRequest); // why return?
+        modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
-    
-    
 
 }
