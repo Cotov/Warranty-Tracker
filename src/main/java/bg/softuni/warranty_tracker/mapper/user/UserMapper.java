@@ -11,25 +11,38 @@ import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 public class UserMapper {
 
     public User toUser(UserRegisterRequest userRegisterRequest, String encodedPassword) {
-        return User.builder()
-                .username(userRegisterRequest.getUsername())
-                .password(encodedPassword)
-                .email(userRegisterRequest.getEmail())
-                .firstName(userRegisterRequest.getFirstName())
-                .lastName(userRegisterRequest.getLastName())
-                .createdAt(LocalDateTime.now())
-                .build();
+        return userRegisterRequest == null ? null
+                : User.builder()
+                        .username(userRegisterRequest.getUsername())
+                        .password(encodedPassword)
+                        .email(userRegisterRequest.getEmail())
+                        .firstName(userRegisterRequest.getFirstName())
+                        .lastName(userRegisterRequest.getLastName())
+                        .createdAt(LocalDateTime.now())
+                        .build();
     }
 
     public UserDto toUserDto(User user) {
-        return user == null ? null : 
-         UserDto.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .email(user.getEmail())
-            .firstName(user.getFirstName())
-            .lastName(user.getLastName())
-            .createdAt(user.getCreatedAt()) // needed? 
-            .build();
+        return user == null ? null
+                : UserDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .createdAt(user.getCreatedAt()) // needed?
+                        .build();
+    }
+
+    public User toUser(UserDto userDto) {
+        return userDto == null ? null
+                : User.builder()
+                        .id(userDto.getId())
+                        .username(userDto.getUsername())
+                        .email(userDto.getEmail())
+                        .firstName(userDto.getFirstName())
+                        .lastName(userDto.getLastName())
+                        .createdAt(userDto.getCreatedAt())
+                        .build();
     }
 }

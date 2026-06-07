@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Dashboard | Warranty Tracker', '/css/dashboard.css')}"></head>
+
+<body class="dashboard-page">
+
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
+
+    <main class="dashboard-container">
+
+        <div class="dashboard-top">
+            <div class="page-header">
+                <h1>SYS.DASHBOARD()</h1>
+                <p>Tracked hardware assets for operator_id</p>
+                <p class="product-count">3 products registered</p>
+            </div>
+            <a href="#" class="btn-primary">+ Register Product</a>
+        </div>
+
+        <div class="alert-placeholder">
+            <div class="alert-placeholder-label">[!] Warranty Alert — Placeholder</div>
+            <div class="alert-placeholder-title">Products expiring within 60 days will appear here</div>
+            <div class="alert-placeholder-text">
+                This banner will list items approaching warranty expiration (e.g. MacBook Pro — 28 days left).
+                Logic and dynamic content to be wired up later.
+            </div>
+            <span class="alert-placeholder-note">// TODO: implement scheduled expiration check</span>
+        </div>
+
+        <div class="table-wrapper" th:if="${!#lists.isEmpty(products)}">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Serial #</th>
+                        <th>Vendor</th>
+                        <th>Purchased</th>
+                        <th>Warranty Ends</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td class="col-description" th:text="${product.description}"></td>
+                        <td class="col-serial" th:text="${product.serialNumber}"></td>
+                        <td class="col-vendor" th:text="${product.vendor.name}"></td>
+                        <td class="col-date" th:text="${#temporals.format(product.purchaseDate, 'dd MMM yyyy')}"></td>
+                        <td class="col-warranty-end">
+                            <span class="warranty-date"
+                                th:text="${#temporals.format(product.warrantyEndDate, 'dd MMM yyyy')}"></span>
+                        <span class="days-remaining expiring">To be implemented</span>
+                        </td>
+                        <td><span class="status-badge expiring">To be implemented</span></td>
+                        <td class="col-actions">
+                            <a href="#" class="action-link">Edit</a>
+                            <span class="action-separator">|</span>
+                            <a href="#" class="action-link danger">Delete</a>
+                            <span class="action-separator">|</span>
+                            <a href="#" class="action-link">Claim</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(products)}">
+            <p>No products registered yet.</p>
+            <a href="#" class="btn-primary">+ Register Product</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

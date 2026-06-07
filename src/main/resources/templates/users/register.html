@@ -14,9 +14,6 @@
     
 
     <form th:action="@{/users/register}" th:object="${userRegisterRequest}" method="post">
-        <div class="global-error" th:classappend="${#fields.hasGlobalErrors()} ? 'is-visible'">
-            [ERROR] STACK_VALIDATION_FAILED: REJECTED INPUT
-        </div>
         <div class="form-row">
             <div class="form-group">
                 <label for="firstName">First Name</label>
