@@ -1,115 +1,117 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/head :: head('Register Product | Warranty Tracker', '/css/register-product.css')}"></head>
+
 <body class="register-product-page">
 
-<div th:replace="~{fragments/header :: header('dashboard')}"></div>
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
 
-<div class="register-product-container">
-    <div class="page-header">
-        <h1>SYS.REGISTER_PRODUCT()</h1>
-        <p>Add a hardware asset to your warranty tracking inventory</p>
-    </div>
-
-    <div class="global-error">[!] Registration failed — correct the highlighted fields and retry.</div>
-
-    <form action="#" method="post">
-        <div class="form-group">
-            <label for="description">Product Description</label>
-            <input type="text" id="description" name="description" placeholder="e.g. MacBook Pro 14&quot;">
+    <div class="register-product-container">
+        <div class="page-header">
+            <h1>SYS.REGISTER_PRODUCT()</h1>
+            <p>Add a hardware asset to your warranty tracking inventory</p>
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="serialNumber">Serial Number</label>
-                <input type="text" id="serialNumber" name="serialNumber" placeholder="e.g. SN-MBP-001">
-                <span class="error-message">[!] Serial number is required</span>
-            </div>
-            <div class="form-group">
-                <label for="vendorId">Vendor</label>
-                <select id="vendorId" name="vendorId">
-                    <option value="">— Select vendor —</option>
-                    <option value="apple">Apple</option>
-                    <option value="dell">Dell</option>
-                    <option value="logitech">Logitech</option>
-                    <option value="__new__">+ Add new vendor</option>
-                </select>
-            </div>
-        </div>
+        <div class="global-error">[!] Registration failed — correct the highlighted fields and retry.</div>
 
-        <div class="vendor-create-panel" id="vendor-create-panel">
-            <div class="vendor-create-panel-header">
-                <h2>NEW_VENDOR()</h2>
-                <p>Register vendor details — saved together with this product on submit</p>
-            </div>
-
+        <form th:action="@{/products/register}" th:object="${productRegisterRequest}" method="post">
             <div class="form-group">
-                <label for="vendorName">Vendor Name</label>
-                <input type="text" id="vendorName" name="vendorName" placeholder="e.g. Lenovo Bulgaria">
+                <label for="description">Product Description</label>
+                <input type="text" id="description" name="description" placeholder="e.g. MacBook Pro 14&quot;">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="vendorEmail">Contact Email</label>
-                    <input type="email" id="vendorEmail" name="vendorEmail" placeholder="support@vendor.bg">
+                    <label for="serialNumber">Serial Number</label>
+                    <input type="text" id="serialNumber" name="serialNumber" placeholder="e.g. SN-MBP-001">
+                    <span class="error-message">[!] Serial number is required</span>
                 </div>
                 <div class="form-group">
-                    <label for="vendorPhone">Contact Phone</label>
-                    <input type="text" id="vendorPhone" name="vendorPhone" placeholder="+359 2 123 4567">
+                    <label for="vendorId">Vendor</label>
+                    <select id="vendorId" th:field="*{vendorId}">
+                        <option value="">— Select vendor —</option>
+                        <option th:each="vendor : ${vendors}" th:value="${vendor.id}" th:text="${vendor.name}">
+                        </option>
+                        <option value="__new__">+ Add new vendor</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="vendorWebsite">Website</label>
-                <input type="url" id="vendorWebsite" name="vendorWebsite" placeholder="https://vendor.bg">
-                <span class="vendor-create-note">// TODO: create vendor + link to product on submit</span>
+            <div class="vendor-create-panel" id="vendor-create-panel">
+                <div class="vendor-create-panel-header">
+                    <h2>NEW_VENDOR()</h2>
+                    <p>Register vendor details — saved together with this product on submit</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="vendorName">Vendor Name</label>
+                    <input type="text" id="vendorName" name="vendorName" placeholder="e.g. Lenovo Bulgaria">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vendorEmail">Contact Email</label>
+                        <input type="email" id="vendorEmail" name="vendorEmail" placeholder="support@vendor.bg">
+                    </div>
+                    <div class="form-group">
+                        <label for="vendorPhone">Contact Phone</label>
+                        <input type="text" id="vendorPhone" name="vendorPhone" placeholder="+359 2 123 4567">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vendorWebsite">Website</label>
+                    <input type="url" id="vendorWebsite" name="vendorWebsite" placeholder="https://vendor.bg">
+                    <span class="vendor-create-note">// TODO: create vendor + link to product on submit</span>
+                </div>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="purchaseDate">Purchase Date</label>
+                    <input type="date" id="purchaseDate" name="purchaseDate">
+                </div>
+                <div class="form-group">
+                    <label for="warrantyStartDate">Warranty Start</label>
+                    <input type="date" id="warrantyStartDate" name="warrantyStartDate">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="warrantyEndDate">Warranty End</label>
+                    <input type="date" id="warrantyEndDate" name="warrantyEndDate">
+                </div>
+                <div class="form-group">
+                    <label for="physicalReceiptLocation">Receipt Location</label>
+                    <input type="text" id="physicalReceiptLocation" name="physicalReceiptLocation"
+                        placeholder="e.g. Home office drawer">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Register Product</button>
+        </form>
+
+        <div class="footer-text">
+            Return to <a th:href="@{/dashboard}">Dashboard</a>
         </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="purchaseDate">Purchase Date</label>
-                <input type="date" id="purchaseDate" name="purchaseDate">
-            </div>
-            <div class="form-group">
-                <label for="warrantyStartDate">Warranty Start</label>
-                <input type="date" id="warrantyStartDate" name="warrantyStartDate">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="warrantyEndDate">Warranty End</label>
-                <input type="date" id="warrantyEndDate" name="warrantyEndDate">
-            </div>
-            <div class="form-group">
-                <label for="physicalReceiptLocation">Receipt Location</label>
-                <input type="text" id="physicalReceiptLocation" name="physicalReceiptLocation"
-                       placeholder="e.g. Home office drawer">
-            </div>
-        </div>
-
-        <button type="submit" class="btn-submit">Register Product</button>
-    </form>
-
-    <div class="footer-text">
-        Return to <a th:href="@{/dashboard}">Dashboard</a>
     </div>
-</div>
 
-<script>
-    (function () {
-        var vendorSelect = document.getElementById('vendorId');
-        var vendorPanel = document.getElementById('vendor-create-panel');
+    <script>
+        (function () {
+            var vendorSelect = document.getElementById('vendorId');
+            var vendorPanel = document.getElementById('vendor-create-panel');
 
-        function toggleVendorPanel() {
-            vendorPanel.classList.toggle('is-visible', vendorSelect.value === '__new__');
-        }
+            function toggleVendorPanel() {
+                vendorPanel.classList.toggle('is-visible', vendorSelect.value === '__new__');
+            }
 
-        vendorSelect.addEventListener('change', toggleVendorPanel);
-        toggleVendorPanel();
-    })();
-</script>
+            vendorSelect.addEventListener('change', toggleVendorPanel);
+            toggleVendorPanel();
+        })();
+    </script>
 
 </body>
+
 </html>

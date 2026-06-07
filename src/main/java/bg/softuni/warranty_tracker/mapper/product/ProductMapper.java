@@ -2,10 +2,14 @@ package bg.softuni.warranty_tracker.mapper.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
+import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
 import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.mapper.vendor.VendorMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
@@ -63,6 +67,20 @@ public class ProductMapper {
         .physicalReceiptLocation(product.getPhysicalReceiptLocation())
         .vendor(vendorMapper.toVendorDto(product.getVendor()))
         .user(userMapper.toUserDto(product.getUser()))
+        .build();
+    }
+
+    public Product toProduct(RegisterProductRequest registerProductRequest, VendorDto vendorDto, UserDto userDto) {
+        return registerProductRequest == null ? null : 
+        Product.builder()
+        .serialNumber(registerProductRequest.getSerialNumber())
+        .description(registerProductRequest.getProductDescription())
+        .purchaseDate(registerProductRequest.getPurchaseDate())
+        .warrantyStartDate(registerProductRequest.getWarrantyStart())
+        .warrantyEndDate(registerProductRequest.getWarrantyEnd())
+        .physicalReceiptLocation(registerProductRequest.getReceiptLocation())
+        .vendor(vendorMapper.toVendor(vendorDto))
+        .user(userMapper.toUser(userDto))
         .build();
     }
 
