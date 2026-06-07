@@ -9,19 +9,21 @@ import bg.softuni.warranty_tracker.model.entity.contact.Contact;
 public class ContactMapper {
 
     public Contact toContact(ContactDto contactDto) {
-        return Contact.builder()
-        .email(contactDto.getEmail())
-        .phone(contactDto.getPhone())
-        .website(contactDto.getWebsite())
-        .build();
+        return contactDto == null ? null
+                : Contact.builder()
+                        .email(contactDto.getEmail())
+                        .phone(contactDto.getPhone())
+                        .website(contactDto.getWebsite())
+                        .build();
     }
 
     public ContactDto toContactDto(Contact contact) {
-        return ContactDto.builder()
-        .email(contact.getEmail())
-        .phone(contact.getPhone())
-        .website(contact.getWebsite())
-        .build();
+        return contact == null ? null
+                : ContactDto.builder()
+                        .email(contact.getEmail())
+                        .phone(contact.getPhone())
+                        .website(contact.getWebsite())
+                        .build();
     }
 
 }

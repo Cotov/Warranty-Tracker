@@ -15,7 +15,7 @@
                 <p>Tracked hardware assets for operator_id</p>
                 <p class="product-count">3 products registered</p>
             </div>
-            <a href="#" class="btn-primary">+ Register Product</a>
+            <a th:href="@{/products/register}" class="btn-primary">+ Register Product</a>
         </div>
 
         <div class="alert-placeholder">
@@ -67,7 +67,7 @@
 
         <div class="empty-state" th:if="${#lists.isEmpty(products)}">
             <p>No products registered yet.</p>
-            <a href="#" class="btn-primary">+ Register Product</a>
+            <a th:href="@{/products/register}" class="btn-primary">+ Register Product</a>
         </div>
 
     </main>
