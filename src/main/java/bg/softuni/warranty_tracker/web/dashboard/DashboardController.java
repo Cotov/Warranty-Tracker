@@ -24,6 +24,7 @@ public class DashboardController {
         this.userService = userService;
     }
 
+    //todo sorting of dashboard? 
     @GetMapping()
     public ModelAndView dashboard() {
         ModelAndView modelAndView = new ModelAndView("dashboard/dashboard");

@@ -50,6 +50,7 @@ public class ProductController {
         return modelAndView;
     }
 
+    //todo make serial unique
     @PostMapping("/register")
     public ModelAndView registerProduct(@Valid @ModelAttribute RegisterProductRequest registerProductRequest,
             BindingResult bindingResult) {
