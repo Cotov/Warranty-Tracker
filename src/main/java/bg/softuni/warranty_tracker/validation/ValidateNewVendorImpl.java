@@ -29,28 +29,28 @@ public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVen
         context.disableDefaultConstraintViolation();
 
         if (vendorRequest == null || isBlank(vendorRequest.getName())) {
-            addFieldError(context, "registerVendorRequest.name", ValidationMessages.VENDOR_REQUIRED);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.name", ValidationMessages.VENDOR_REQUIRED);
             valid = false;
         }
 
         if (vendorRequest == null || isBlank(vendorRequest.getEmail())) {
-            addFieldError(context, "registerVendorRequest.email", ValidationMessages.EMAIL_REQUIRED);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.email", ValidationMessages.EMAIL_REQUIRED);
             valid = false;
         } else if (!isValidEmail(vendorRequest.getEmail())) {
-            addFieldError(context, "registerVendorRequest.email", ValidationMessages.EMAIL_INVALID);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.email", ValidationMessages.EMAIL_INVALID);
             valid = false;
         }
 
         if (vendorRequest == null || isBlank(vendorRequest.getPhone())) {
-            addFieldError(context, "registerVendorRequest.phone", ValidationMessages.PHONE_REQUIRED);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.phone", ValidationMessages.PHONE_REQUIRED);
             valid = false;
         }
 
         if (vendorRequest == null || isBlank(vendorRequest.getWebsite())) {
-            addFieldError(context, "registerVendorRequest.website", ValidationMessages.WEBSITE_REQUIRED);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.website", ValidationMessages.WEBSITE_REQUIRED);
             valid = false;
         } else if (!isValidWebsite(vendorRequest.getWebsite())) {
-            addFieldError(context, "registerVendorRequest.website", ValidationMessages.WEBSITE_INVALID);
+            ValidationUtils.addFieldError(context, "registerVendorRequest.website", ValidationMessages.WEBSITE_INVALID);
             valid = false;
         }
         return valid;
@@ -58,12 +58,6 @@ public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVen
 
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
-    }
-
-    private void addFieldError(ConstraintValidatorContext context, String field, String message) {
-        context.buildConstraintViolationWithTemplate(message)
-                .addPropertyNode(field)
-                .addConstraintViolation();
     }
 
     private boolean isValidEmail(String email) {

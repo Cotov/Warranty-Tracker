@@ -48,21 +48,6 @@ body.register-product-page {
     letter-spacing: 0.5px;
 }
 
-.global-error {
-    background-color: var(--error-bg);
-    border: 1px solid var(--error-color);
-    color: var(--error-color);
-    padding: 12px;
-    border-radius: 4px;
-    font-size: 13px;
-    margin-bottom: 24px;
-    display: none;
-}
-
-.global-error.is-visible {
-    display: block;
-}
-
 .form-row {
     display: flex;
     gap: 16px;

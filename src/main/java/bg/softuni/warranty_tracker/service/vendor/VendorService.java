@@ -8,17 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
-import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.mapper.vendor.VendorMapper;
-import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.model.entity.vendor.Vendor;
 import bg.softuni.warranty_tracker.repository.vendor.VendorRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 public class VendorService {
@@ -26,7 +27,6 @@ public class VendorService {
     private final VendorRepository vendorRepository;
     private final UserMapper userMapper;
     private final VendorMapper vendorMapper;
-
 
     public VendorService(VendorRepository vendorRepository, UserMapper userMapper, VendorMapper vendorMapper) {
         this.vendorRepository = vendorRepository;
@@ -45,24 +45,33 @@ public class VendorService {
         return vendors.stream().map(vendorMapper::toVendorDto).toList();
     }
 
-    public VendorDto getVendorById(UUID uuid) {
-        if (uuid == null) {
+    public VendorDto getVendorByIdAndUserId(UUID vendorUuid, UserDto userDto) {
+        if (vendorUuid == null) {
             return null;
         }
-        Vendor vendor = vendorRepository.findById(uuid).orElse(null);
 
+        Vendor vendor = vendorRepository.findById(vendorUuid).orElse(null);
         if (vendor == null) {
             throw new RuntimeException(ExceptionMessages.VENDOR_NOT_FOUND);
         }
+
+        if (!vendor.getUser().getId().equals(userDto.getId())) {
+            throw new RuntimeException(String.format(ExceptionMessages.VENDOR_AND_SESSION_USER_MISMATCH,
+                    vendorUuid, userDto.getId()));
+        }
+
         return vendorMapper.toVendorDto(vendor);
     }
 
-    public VendorDto createVendor(RegisterVendorRequest registerVendorRequest){
+    public VendorDto createVendor(RegisterVendorRequest registerVendorRequest, UserDto userDto) {
         if (registerVendorRequest == null) {
             throw new RuntimeException(ExceptionMessages.VENDOR_CREATION_FAILED);
         }
 
-        Vendor vendor = vendorMapper.toVendor()
+        Vendor vendor = vendorMapper.toVendor(registerVendorRequest, userDto);
+        vendorRepository.save(vendor);
+        log.info(LogMessages.VENDOR_REGISTERED_SUCCESSFULLY);
+        return vendorMapper.toVendorDto(vendor);
     }
 
 }

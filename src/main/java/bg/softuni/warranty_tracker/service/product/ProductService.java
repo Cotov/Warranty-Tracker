@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import bg.softuni.warranty_tracker.constant.Constants;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
@@ -18,7 +19,9 @@ import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.repository.product.ProductRepository;
 import bg.softuni.warranty_tracker.service.vendor.VendorService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 public class ProductService {
@@ -48,17 +51,23 @@ public class ProductService {
             throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
+        VendorDto vendorDto;
         if (registerProductRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
-            VendorDto vendorDto = vendorService.createVendor(registerProductRequest.getRegisterVendorRequest());
+            vendorDto = vendorService.createVendor(registerProductRequest.getRegisterVendorRequest(), userDto);
+        } else {
+            UUID vendorUuid;
+            try {
+                vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
+            } catch (Exception e) {
+                throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
+            }
+            vendorDto = vendorService.getVendorByIdAndUserId(vendorUuid, userDto);
         }
-        //else
-
-        UUID vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
-        VendorDto vendorDto = vendorService.getVendorById(vendorUuid);
 
         Product product = productMapper.toProduct(registerProductRequest, vendorDto, userDto);
         productRepository.save(product);
+        log.info(LogMessages.PRODUCT_REGISTERED_SUCCESSFULLY);
         return productMapper.toDto(product);
-    }
 
+    }
 }

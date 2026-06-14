@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterVendorRequest {
+
     private String name;
 
     @Email(message = ValidationMessages.EMAIL_INVALID)
     private String email;
+    
     private String phone;
 
     @URL(message = ValidationMessages.WEBSITE_INVALID)

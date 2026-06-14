@@ -40,7 +40,7 @@ public class ProductController {
         modelAndView.setViewName("products/register-product");
 
         RegisterProductRequest registerProductRequest = new RegisterProductRequest();
-        modelAndView.addObject("productRegisterRequest", registerProductRequest);
+        modelAndView.addObject("registerProductRequest", registerProductRequest);
 
         registerProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
 
@@ -59,12 +59,12 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             UserDto user = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b");
             modelAndView.addObject("vendors", vendorService.getAllByUser(user));
-            return modelAndView;   // NOT redirect
+            return modelAndView; 
         }
 
         UserDto userDto = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b");
         productService.registerProduct(registerProductRequest, userDto);
-        modelAndView.setViewName("redirect:/dashboard/dashboard");
+        modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
 
