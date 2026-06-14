@@ -1,7 +1,7 @@
 package bg.softuni.warranty_tracker.constant;
 // todo remove duplicate calls from entity
 public class ValidationMessages {
-    // Vendor
+    //todo code duplication
     public static final String NAME_REQUIRED = "Name is required";
 
     // User
@@ -17,8 +17,10 @@ public class ValidationMessages {
 
     // Contact
     public static final String EMAIL_REQUIRED = "Email is required";
+    public static final String EMAIL_INVALID = "Invalid email format";
     public static final String PHONE_REQUIRED = "Phone is required";
     public static final String WEBSITE_REQUIRED = "Website is required";
+    public static final String WEBSITE_INVALID = "Invalid website URL";
 
     // Warranty Claim
     public static final String STATUS_REQUIRED = "Status is required";
@@ -32,4 +34,12 @@ public class ValidationMessages {
     public static final String WARRANTY_START_DATE_REQUIRED = "Warranty start date is required";
     public static final String WARRANTY_END_DATE_REQUIRED = "Warranty end date is required";
     public static final String PHYSICAL_RECEIPT_LOCATION_REQUIRED = "Physical receipt location is required";
+    public static final String PURCHASE_DATE_PAST_OR_PRESENT = "Pusrchase date cannot be in the future";
+    public static final String WARRANTY_END_FUTURE_OR_PRESENT = "Warranty end cannot be in the past";
+    public static final String INVALID_PRODUCT_DATES = "Product Dates are invalid";
+    public static final String WARRANTY_START_CANNOT_BE_BEFORE_START = "Warranty start date must be before warranty end date";
+
+    //Vendor
+    public static final String VENDOR_REQUIRED = "Vendor name is required";
+    public static final String INVALID_VENDOR_DETAILS = "Vendor details are invalid";
 }

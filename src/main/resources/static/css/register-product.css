@@ -1,6 +1,10 @@
-.register-container {
+body.register-product-page {
+    justify-content: flex-start;
+}
+
+.register-product-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 680px;
     background: var(--card-bg);
     padding: 40px;
     border-radius: 8px;
@@ -10,7 +14,7 @@
     overflow: hidden;
 }
 
-.register-container::before {
+.register-product-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -21,7 +25,7 @@
 }
 
 .page-header {
-    margin-bottom: 32px;
+    margin-bottom: 28px;
 }
 
 .page-header h1 {
@@ -56,10 +60,6 @@
     margin-bottom: 22px;
 }
 
-.form-row .form-group {
-    margin-bottom: 22px;
-}
-
 .form-group label {
     font-size: 11px;
     font-weight: 600;
@@ -69,7 +69,8 @@
     letter-spacing: 1px;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 12px 14px;
     font-size: 14px;
@@ -83,12 +84,26 @@
     letter-spacing: 0.5px;
 }
 
-.form-group input[type="password"] {
-    font-family: monospace;
-    letter-spacing: 3px;
+.form-group input[type="date"] {
+    color-scheme: dark;
 }
 
-.form-group input:focus {
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.form-group select option[value="__new__"] {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.form-group input:focus,
+.form-group select:focus {
     border-color: var(--border-focus);
     box-shadow: 0 0 12px var(--primary-glow);
     background-color: #0d1527;
@@ -116,6 +131,61 @@
 
 .error-message.is-visible {
     display: block;
+}
+
+.vendor-create-panel {
+    display: none;
+    background-color: rgba(9, 13, 22, 0.5);
+    border: 1px dashed rgba(56, 189, 248, 0.35);
+    border-left: 3px solid var(--primary);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.vendor-create-panel.is-visible {
+    display: block;
+}
+
+.vendor-create-panel-header {
+    margin-bottom: 18px;
+}
+
+.vendor-create-panel-header h2 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.vendor-create-panel-header h2::before {
+    content: '+ ';
+}
+
+.vendor-create-panel-header p {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.vendor-create-panel .form-group {
+    margin-bottom: 18px;
+}
+
+.vendor-create-panel .form-row .form-group {
+    margin-bottom: 18px;
+}
+
+.vendor-create-note {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    opacity: 0.7;
 }
 
 .btn-submit {
@@ -156,4 +226,15 @@
 
 .footer-text a:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .register-product-container {
+        padding: 28px 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
 }

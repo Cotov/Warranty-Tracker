@@ -41,7 +41,7 @@ public class UserController {
             return modelAndView;
         }
         UserDto userDto = userService.register(userRegisterRequest); // why return it?
-        modelAndView.setViewName("redirect:/users/login"); // redirects where?
+        modelAndView.setViewName("redirect:/dashboard/dashboard"); // redirects where?
         return modelAndView;
     }
 

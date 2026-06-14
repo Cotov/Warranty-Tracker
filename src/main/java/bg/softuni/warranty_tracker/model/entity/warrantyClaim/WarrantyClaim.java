@@ -51,7 +51,4 @@ public class WarrantyClaim {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
-
 }
-//Duplicate application entry points (bg.softuni.warranty.tracker vs bg.softuni.warranty_tracker) — packaging cleanup, not domain design
