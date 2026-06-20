@@ -3,6 +3,8 @@ package bg.softuni.warranty_tracker.service.product;
 import java.util.List;
 import java.util.UUID;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,9 @@ import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
 import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.repository.product.ProductRepository;
+import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.service.vendor.VendorService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -69,5 +73,19 @@ public class ProductService {
         log.info(LogMessages.PRODUCT_REGISTERED_SUCCESSFULLY);
         return productMapper.toDto(product);
 
+    }
+
+    public void deleteProductById(String id, UserDto userDto) {
+
+        Product product = productRepository.findById(UUID.fromString(id)).orElse(null);
+
+        if (product == null) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);
+        } else if (!userDto.getId().equals(product.getUser().getId())) {
+            throw new RuntimeException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
+        }
+
+        productRepository.delete(product);
+        log.info("Product deleted: " + product.getId());
     }
 }

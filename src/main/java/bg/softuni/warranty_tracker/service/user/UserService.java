@@ -34,7 +34,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserDto register(UserRegisterRequest userRegisterRequest) {
+    public void register(UserRegisterRequest userRegisterRequest) {
 
         userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {
             throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
@@ -45,8 +45,6 @@ public class UserService {
 
         userRepository.save(user);
         log.info(LogMessages.USER_REGISTERED_SUCCESSFULLY, user.getUsername());
-
-        return userMapper.toUserDto(user);
     }
 
     public UserDto login(UserLoginRequest userLoginRequest) {
@@ -65,8 +63,8 @@ public class UserService {
         return userMapper.toUserDto(user);
     }
 
-    public UserDto getById(String uuid) {
-        Optional<User> user = userRepository.findById(UUID.fromString(uuid));
+    public UserDto getById(UUID uuid) {
+        Optional<User> user = userRepository.findById(uuid);
         if (user.isEmpty()) {
             throw new RuntimeException(ExceptionMessages.USER_NOT_FOUND);
         }

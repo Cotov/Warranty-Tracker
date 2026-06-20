@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,8 +16,10 @@ import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
+import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.service.user.UserService;
 import bg.softuni.warranty_tracker.service.vendor.VendorService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("/register")
-    public ModelAndView registerProduct() {
+    public ModelAndView registerProduct(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/register-product");
 
@@ -44,29 +48,37 @@ public class ProductController {
 
         registerProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
 
-        UserDto user = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b");
+        UserDto user = userService.getById(SessionUtils.getUserId(session));
         List<VendorDto> vendors = vendorService.getAllByUser(user);
         modelAndView.addObject("vendors", vendors);
         return modelAndView;
     }
 
-    //todo make serial unique
+    // todo make serial unique
     @PostMapping("/register")
     public ModelAndView registerProduct(@Valid @ModelAttribute RegisterProductRequest registerProductRequest,
-            BindingResult bindingResult) {
+            BindingResult bindingResult, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/register-product");
 
         if (bindingResult.hasErrors()) {
-            UserDto user = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b");
+            UserDto user = userService.getById(SessionUtils.getUserId(session));
             modelAndView.addObject("vendors", vendorService.getAllByUser(user));
-            return modelAndView; 
+            return modelAndView;
         }
 
-        UserDto userDto = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b");
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
         productService.registerProduct(registerProductRequest, userDto);
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
 
+    @DeleteMapping("/{productId}")
+    public ModelAndView deleteProduct(@PathVariable String productId, HttpSession session) {
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        productService.deleteProductById(productId, userDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/dashboard");
+        return modelAndView;
+    }
 }

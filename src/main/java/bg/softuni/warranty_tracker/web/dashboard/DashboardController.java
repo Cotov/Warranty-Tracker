@@ -3,14 +3,18 @@ package bg.softuni.warranty_tracker.web.dashboard;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.service.product.ProductService;
 import bg.softuni.warranty_tracker.service.user.UserService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -24,11 +28,13 @@ public class DashboardController {
         this.userService = userService;
     }
 
-    //todo sorting of dashboard? 
+    // todo sorting of dashboard?
     @GetMapping()
-    public ModelAndView dashboard() {
+    public ModelAndView dashboard(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("dashboard/dashboard");
-        UserDto userDto = userService.getById("5d2ccb89-21e6-4efc-8515-f5cd87ce1a2b"); // until session implemented
+        UserDto userDto = userService
+                .getById(SessionUtils.getUserId(session));
+
         List<ProductDto> products = productService.getAllProducts(userDto);
         modelAndView.addObject("userDto", userDto);
         modelAndView.addObject("products", products);

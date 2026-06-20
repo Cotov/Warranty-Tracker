@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import bg.softuni.warranty_tracker.service.user.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
+import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.user.UserLoginRequest;
 
@@ -37,10 +39,10 @@ public class UserController {
 
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("users/register"); // but with error messages
+            modelAndView.setViewName("users/register");
             return modelAndView;
         }
-        UserDto userDto = userService.register(userRegisterRequest); // why return it?
+        userService.register(userRegisterRequest);
         modelAndView.setViewName("redirect:/dashboard/dashboard"); // redirects where?
         return modelAndView;
     }
@@ -53,13 +55,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@Valid @ModelAttribute UserLoginRequest userLoginRequest, BindingResult bindingResult) {
+    public ModelAndView login(@Valid @ModelAttribute UserLoginRequest userLoginRequest, BindingResult bindingResult,
+            HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("users/login");
         if (bindingResult.hasErrors()) {
             return modelAndView; // how does this keep the errors from the failed login?
         }
 
-        UserDto userDto = userService.login(userLoginRequest); // why return?
+        UserDto userDto = userService.login(userLoginRequest);
+        SessionUtils.setUserId(session, userDto.getId());
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
