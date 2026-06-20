@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/head :: head('Register Product | Warranty Tracker', '/css/register-product.css')}"></head>
+<head th:replace="~{fragments/head :: head('Edit Product | Warranty Tracker', '/css/edit-product.css')}"></head>
 
-<body class="register-product-page">
+<body class="edit-product-page">
 
     <div th:replace="~{fragments/header :: header('dashboard')}"></div>
 
-    <div class="register-product-container">
+    <div class="edit-product-container">
         <div class="page-header">
-            <h1>SYS.REGISTER_PRODUCT()</h1>
-            <p>Add a hardware asset to your warranty tracking inventory</p>
+            <h1>SYS.EDIT_PRODUCT()</h1>
+            <p>Update hardware asset details in your warranty inventory</p>
+            <p class="edit-asset-label">Editing asset <span th:text="${editProductRequest.serialNumber}">—</span></p>
         </div>
-        
-        <form th:action="@{/products/register}" th:object="${registerProductRequest}" method="post">
+
+        <form th:action="@{/products/{productId}(productId=${productId})}" th:object="${editProductRequest}"
+            method="post">
+            <input type="hidden" name="_method" value="put" />
+
             <div class="form-group">
                 <label for="description">Product Description</label>
-                <input type="text" th:field="*{productDescription}" id="description" name="description"
+                <input type="text" th:field="*{productDescription}" id="description" name="productDescription"
                     placeholder="e.g. MacBook Pro 14&quot;">
                 <span class="error-message" th:classappend="${#fields.hasErrors('productDescription')} ? 'is-visible'"
                     th:errors="*{productDescription}">[!] CRITERIA FAILED</span>
@@ -28,8 +32,7 @@
                     <input type="text" th:field="*{serialNumber}" id="serialNumber" name="serialNumber"
                         placeholder="e.g. SN-MBP-001">
                     <span class="error-message" th:classappend="${#fields.hasErrors('serialNumber')} ? 'is-visible'"
-                        th:errors="*{serialNumber}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{serialNumber}">[!] CRITERIA FAILED</span>
                 </div>
                 <div class="form-group">
                     <label for="vendorId">Vendor</label>
@@ -54,8 +57,7 @@
                         placeholder="e.g. Lenovo Bulgaria">
                     <span class="error-message"
                         th:classappend="${#fields.hasErrors('registerVendorRequest.name')} ? 'is-visible'"
-                        th:errors="*{registerVendorRequest.name}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{registerVendorRequest.name}">[!] CRITERIA FAILED</span>
                 </div>
 
                 <div class="form-row">
@@ -65,8 +67,7 @@
                             name="vendorEmail" placeholder="support@vendor.bg">
                         <span class="error-message"
                             th:classappend="${#fields.hasErrors('registerVendorRequest.email')} ? 'is-visible'"
-                            th:errors="*{registerVendorRequest.email}">
-                            [!] CRITERIA FAILED</span>
+                            th:errors="*{registerVendorRequest.email}">[!] CRITERIA FAILED</span>
                     </div>
                     <div class="form-group">
                         <label for="vendorPhone">Contact Phone</label>
@@ -74,8 +75,7 @@
                             placeholder="+359 2 123 4567">
                         <span class="error-message"
                             th:classappend="${#fields.hasErrors('registerVendorRequest.phone')} ? 'is-visible'"
-                            th:errors="*{registerVendorRequest.phone}">
-                            [!] CRITERIA FAILED</span>
+                            th:errors="*{registerVendorRequest.phone}">[!] CRITERIA FAILED</span>
                     </div>
                 </div>
 
@@ -85,8 +85,7 @@
                         name="vendorWebsite" placeholder="https://vendor.bg">
                     <span class="error-message"
                         th:classappend="${#fields.hasErrors('registerVendorRequest.website')} ? 'is-visible'"
-                        th:errors="*{registerVendorRequest.website}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{registerVendorRequest.website}">[!] CRITERIA FAILED</span>
                 </div>
             </div>
 
@@ -95,15 +94,13 @@
                     <label for="purchaseDate">Purchase Date</label>
                     <input type="date" th:field="*{purchaseDate}" id="purchaseDate" name="purchaseDate">
                     <span class="error-message" th:classappend="${#fields.hasErrors('purchaseDate')} ? 'is-visible'"
-                        th:errors="*{purchaseDate}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{purchaseDate}">[!] CRITERIA FAILED</span>
                 </div>
                 <div class="form-group">
                     <label for="warrantyStartDate">Warranty Start</label>
                     <input type="date" th:field="*{warrantyStart}" id="warrantyStartDate" name="warrantyStart">
                     <span class="error-message" th:classappend="${#fields.hasErrors('warrantyStart')} ? 'is-visible'"
-                        th:errors="*{warrantyStart}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{warrantyStart}">[!] CRITERIA FAILED</span>
                 </div>
             </div>
 
@@ -112,20 +109,21 @@
                     <label for="warrantyEndDate">Warranty End</label>
                     <input type="date" th:field="*{warrantyEnd}" id="warrantyEndDate" name="warrantyEnd">
                     <span class="error-message" th:classappend="${#fields.hasErrors('warrantyEnd')} ? 'is-visible'"
-                        th:errors="*{warrantyEnd}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{warrantyEnd}">[!] CRITERIA FAILED</span>
                 </div>
                 <div class="form-group">
                     <label for="physicalReceiptLocation">Receipt Location</label>
                     <input type="text" th:field="*{receiptLocation}" id="physicalReceiptLocation"
-                        name="physicalReceiptLocation" placeholder="e.g. Home office drawer">
+                        name="receiptLocation" placeholder="e.g. Home office drawer">
                     <span class="error-message" th:classappend="${#fields.hasErrors('receiptLocation')} ? 'is-visible'"
-                        th:errors="*{receiptLocation}">
-                        [!] CRITERIA FAILED</span>
+                        th:errors="*{receiptLocation}">[!] CRITERIA FAILED</span>
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">Register Product</button>
+            <div class="form-actions">
+                <a th:href="@{/dashboard}" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-submit">Save Changes</button>
+            </div>
         </form>
 
         <div class="footer-text">

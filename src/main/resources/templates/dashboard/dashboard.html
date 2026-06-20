@@ -53,7 +53,8 @@
                         </td>
                         <td><span class="status-badge expiring">To be implemented</span></td>
                         <td class="col-actions">
-                            <a href="#" class="action-link">Edit</a>
+                            <a th:href="@{/products/{productId}/edit(productId=${product.id})}"
+                                class="action-link">Edit</a>
                             <span class="action-separator">|</span>
 
                             <form th:action="@{/products/{productId}(productId=${product.id})}" method="post"

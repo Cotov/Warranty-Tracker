@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
 import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 @RequestMapping("/products")
@@ -81,4 +83,22 @@ public class ProductController {
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
+
+    @GetMapping("/{productId}/edit")
+    public ModelAndView getProduct(@PathVariable String productId, HttpSession session) {
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        ProductDto productDto = productService.getById(productId, userDto);
+        EditProductRequest = productService.mapToEditProductRequest(productDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("products/edit-product");
+        modelAndView.addObject(editProductRequest);
+    }
+
+    // @PutMapping("/{productId}")
+    // public ModelAndView editProduct(@PathVariable String productId, HttpSession session) {
+
+
+    //     return modelAndView
+    // }
 }
+
