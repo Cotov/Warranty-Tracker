@@ -40,14 +40,4 @@ public class DashboardController {
         modelAndView.addObject("products", products);
         return modelAndView;
     }
-
-    @DeleteMapping("/{productId}")
-    public ModelAndView deleteProduct(@PathVariable String productId, HttpSession session) {
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
-        productService.deleteProductById(productId, userDto);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/dashboard");
-        return modelAndView;
-    }
-
 }

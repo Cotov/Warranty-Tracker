@@ -251,6 +251,10 @@ body.dashboard-page {
     white-space: nowrap;
 }
 
+.delete-form {
+    display: inline;
+}
+
 .action-link {
     font-size: 11px;
     font-weight: 600;
@@ -260,6 +264,13 @@ body.dashboard-page {
     color: var(--text-muted);
     transition: color 0.2s ease;
     padding: 4px 0;
+}
+
+button.action-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .action-link:hover { color: var(--primary); }

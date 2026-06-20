@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -52,7 +54,7 @@ public class ProductController {
         return modelAndView;
     }
 
-    //todo make serial unique
+    // todo make serial unique
     @PostMapping("/register")
     public ModelAndView registerProduct(@Valid @ModelAttribute RegisterProductRequest registerProductRequest,
             BindingResult bindingResult, HttpSession session) {
@@ -62,7 +64,7 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             UserDto user = userService.getById(SessionUtils.getUserId(session));
             modelAndView.addObject("vendors", vendorService.getAllByUser(user));
-            return modelAndView; 
+            return modelAndView;
         }
 
         UserDto userDto = userService.getById(SessionUtils.getUserId(session));
@@ -71,4 +73,12 @@ public class ProductController {
         return modelAndView;
     }
 
+    @DeleteMapping("/{productId}")
+    public ModelAndView deleteProduct(@PathVariable String productId, HttpSession session) {
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        productService.deleteProductById(productId, userDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/dashboard");
+        return modelAndView;
+    }
 }
