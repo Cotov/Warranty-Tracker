@@ -1,7 +1,9 @@
 package bg.softuni.warranty_tracker.web.product;
 
 import bg.softuni.warranty_tracker.service.product.ProductService;
+
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
+import bg.softuni.warranty_tracker.constant.ExceptionMessages;
+import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
+import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
+import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
@@ -23,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 @RequestMapping("/products")
@@ -43,10 +49,10 @@ public class ProductController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/register-product");
 
-        RegisterProductRequest registerProductRequest = new RegisterProductRequest();
-        modelAndView.addObject("registerProductRequest", registerProductRequest);
+        ProductFormRequest productFormRequest = new ProductFormRequest();
+        modelAndView.addObject("productFormRequest", productFormRequest);
 
-        registerProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
+        productFormRequest.setRegisterVendorRequest(new RegisterVendorRequest());
 
         UserDto user = userService.getById(SessionUtils.getUserId(session));
         List<VendorDto> vendors = vendorService.getAllByUser(user);
@@ -56,7 +62,7 @@ public class ProductController {
 
     // todo make serial unique
     @PostMapping("/register")
-    public ModelAndView registerProduct(@Valid @ModelAttribute RegisterProductRequest registerProductRequest,
+    public ModelAndView registerProduct(@Valid @ModelAttribute ProductFormRequest productFormRequest,
             BindingResult bindingResult, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/register-product");
@@ -68,7 +74,7 @@ public class ProductController {
         }
 
         UserDto userDto = userService.getById(SessionUtils.getUserId(session));
-        productService.registerProduct(registerProductRequest, userDto);
+        productService.registerProduct(productFormRequest, userDto);
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
@@ -78,6 +84,45 @@ public class ProductController {
         UserDto userDto = userService.getById(SessionUtils.getUserId(session));
         productService.deleteProductById(productId, userDto);
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/dashboard");
+        return modelAndView;
+    }
+
+    @GetMapping("/{productId}/edit")
+    public ModelAndView getProduct(@PathVariable String productId, HttpSession session) {
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        ProductDto productDto = productService.getById(productId, userDto);
+        EditProductRequest editProductRequest = productService.getEditProductRequest(productDto);
+        List<VendorDto> vendors = productService.getVendorsForEditProduct(productId, userDto);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("products/edit-product");
+        modelAndView.addObject("editProductRequest", editProductRequest);
+        modelAndView.addObject("vendors", vendors);
+        return modelAndView;
+    }
+
+    @PutMapping("/{productId}")
+    public ModelAndView editProduct(
+            @PathVariable String productId,
+            @Valid @ModelAttribute EditProductRequest editProductRequest,
+            BindingResult bindingResult,
+            HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("products/edit-product");
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        if (productId == null) {
+            throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
+        }
+        editProductRequest.setId(UUID.fromString(productId));
+        if (bindingResult.hasErrors()) {
+            List<VendorDto> vendors = productService.getVendorsForEditProduct(productId, userDto);
+            editProductRequest.setVendorName(productService.getById(productId, userDto).getVendor().getName());
+            modelAndView.addObject("editProductRequest", editProductRequest);
+            modelAndView.addObject("vendors", vendors);
+            return modelAndView;
+        }
+        productService.updateProduct(editProductRequest, userDto);
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }

@@ -2,19 +2,19 @@ package bg.softuni.warranty_tracker.validation;
 
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
-import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
+import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
-public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVendor, RegisterProductRequest> {
+public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVendor, ProductFormRequest> {
 
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Override
-    public boolean isValid(RegisterProductRequest request, ConstraintValidatorContext context) {
+    public boolean isValid(ProductFormRequest request, ConstraintValidatorContext context) {
         if (request == null) {
             return true;
         }
