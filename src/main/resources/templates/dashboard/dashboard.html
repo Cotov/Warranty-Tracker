@@ -64,7 +64,7 @@
                             </form>
 
                             <span class="action-separator">|</span>
-                            <a href="#" class="action-link">Claim</a>
+                            <a th:href="@{/products/{productId}/claims(productId=${product.id})}" class="action-link">Claims</a>
                         </td>
                     </tr>
                 </tbody>

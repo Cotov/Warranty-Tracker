@@ -28,7 +28,7 @@ import bg.softuni.warranty_tracker.constant.ValidationMessages;
 @Setter
 @Builder
 @Entity
-public class WarrantyClaim {
+public class Claim {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -37,15 +37,15 @@ public class WarrantyClaim {
     @NotEmpty(message = ValidationMessages.STATUS_REQUIRED)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private WarrantyClaimStatus status;
+    private ClaimStatus status;
+
+    @NotEmpty(message = ValidationMessages.FAULT_DESCRIPTION_REQUIRED)
+    @Column(nullable = true)
+    private String faultDescription;
 
     @NotEmpty(message = ValidationMessages.DATE_SENT_REQUIRED)
     @Column(nullable = false)
-    private LocalDate dateSent;
-
-    @NotEmpty(message = ValidationMessages.NOTES_REQUIRED)
-    @Column(nullable = true)
-    private String notes;
+    private LocalDate dateFiled;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
