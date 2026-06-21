@@ -87,8 +87,8 @@ public class ProductService {
         log.info("Product deleted: " + product.getId());
     }
 
-    public ProductDto getById(String id, UserDto userDto) {
-        Product product = productRepository.findById(UUID.fromString(id)).orElse(null);
+    public ProductDto getById(String productId, UserDto userDto) {
+        Product product = productRepository.findById(UUID.fromString(productId)).orElse(null);
         verifyProductUser(product, userDto.getId());
         return productMapper.toDto(product);
     }

@@ -1,21 +1,27 @@
 package bg.softuni.warranty_tracker.web.warrantyClaim;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 import bg.softuni.warranty_tracker.service.user.UserService;
 import bg.softuni.warranty_tracker.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("products/{productId}/claims")
@@ -40,10 +46,45 @@ public class ClaimController {
         List<ClaimDto> claims = claimService.getClaims(productId, userDto);
         modelAndView.addObject("claims", claims);
 
+        boolean hasActiveClaim = claimService.hasActiveClaim(claims);
+        modelAndView.addObject("hasActiveClaim", hasActiveClaim);
+
         ProductDto product = productService.getById(productId, userDto);
         modelAndView.addObject("product", product);
 
         return modelAndView;
     }
 
+    @GetMapping("/add")
+    public ModelAndView addClaim(@PathVariable String productId, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("claims/add-claim");
+
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        ProductDto product = productService.getById(productId, userDto);
+        AddClaimRequest addClaimRequest = AddClaimRequest.builder()
+                .product(product)
+                .build();
+
+        modelAndView.addObject("addClaimRequest", addClaimRequest);
+        return modelAndView;
+    }
+
+    @PostMapping("/add")
+    public ModelAndView addClaim(@PathVariable String productId, @Valid @ModelAttribute AddClaimRequest addClaimRequest,
+            BindingResult bindingResult, HttpSession session) {
+
+        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        ProductDto product = productService.getById(productId, userDto);
+        addClaimRequest.setProduct(product);
+        ModelAndView modelAndView = new ModelAndView();
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("claims/add-claim");
+            modelAndView.addObject("addClaimRequest", addClaimRequest);
+            return modelAndView;
+        }
+        claimService.addClaim(addClaimRequest);
+        modelAndView.setViewName("redirect:/products/{productId}/claims");
+        return modelAndView;
+    }
 }

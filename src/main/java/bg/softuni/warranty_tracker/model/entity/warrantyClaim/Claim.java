@@ -19,6 +19,7 @@ import lombok.Setter;
 import lombok.Builder;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
 
 @Table(name = "warranty_claims")
@@ -34,16 +35,16 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotEmpty(message = ValidationMessages.STATUS_REQUIRED)
+    @NotNull(message = ValidationMessages.STATUS_REQUIRED)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ClaimStatus status;
 
     @NotEmpty(message = ValidationMessages.FAULT_DESCRIPTION_REQUIRED)
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String faultDescription;
 
-    @NotEmpty(message = ValidationMessages.DATE_SENT_REQUIRED)
+    @NotNull(message = ValidationMessages.DATE_FILED_REQUIRED)
     @Column(nullable = false)
     private LocalDate dateFiled;
 

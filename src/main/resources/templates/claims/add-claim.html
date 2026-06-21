@@ -21,15 +21,15 @@
             <div class="product-context-grid">
                 <div class="product-context-field">
                     <label>Description</label>
-                    <span>MacBook Pro 14" M3</span>
+                    <span th:text="${addClaimRequest.product.description}"></span>
                 </div>
                 <div class="product-context-field">
                     <label>Serial #</label>
-                    <span>C02XG2JHJGH5</span>
+                    <span th:text="${addClaimRequest.product.serialNumber}"></span>
                 </div>
                 <div class="product-context-field">
                     <label>Warranty Ends</label>
-                    <span>15 Aug 2026</span>
+                    <span th:text="${addClaimRequest.product.warrantyEndDate}"></span>
                 </div>
             </div>
         </div>
@@ -44,22 +44,23 @@
             <strong>[!] Claim blocked</strong> — <span>error message here</span>
         </div> -->
 
-        <form action="#" method="post">
+        <form th:action="@{/products/{productId}/claims/add(productId=${addClaimRequest.product.id})}" th:object="${addClaimRequest}" method="post">
 
             <div class="form-group">
                 <label for="faultDescription">Fault Description</label>
                 <textarea id="faultDescription" name="faultDescription"
-                          placeholder="Describe the fault or issue in detail..."></textarea>
+                          placeholder="Describe the fault or issue in detail..." th:field="*{faultDescription}"></textarea>
                 <span class="form-hint">Be specific — include when the issue occurs and how to reproduce it.</span>
                 <!-- Validation error — add class 'input-error' to textarea and 'is-visible' to span -->
-                <span class="error-message">Fault description is required.</span>
+                <span class="error-message" th:classappend="${#fields.hasErrors('faultDescription')} ? 'is-visible' : ''"
+                th:errors="*{faultDescription}"></span>
             </div>
 
             <button type="submit" class="btn-submit">Submit Claim</button>
         </form>
 
         <div class="footer-text">
-            <a href="#">← Back to Claims</a>
+            <a th:href="@{/products/{productId}/claims(productId=${addClaimRequest.product.id})}">← Back to Claims</a>
         </div>
 
     </div>

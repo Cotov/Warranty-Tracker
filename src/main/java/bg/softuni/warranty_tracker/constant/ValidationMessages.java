@@ -24,7 +24,7 @@ public class ValidationMessages {
 
     // Warranty Claim
     public static final String STATUS_REQUIRED = "Status is required";
-    public static final String DATE_SENT_REQUIRED = "Date sent is required";
+    public static final String DATE_FILED_REQUIRED = "Date filed is required";
     public static final String FAULT_DESCRIPTION_REQUIRED = "Fault description is required";
 
     // Product
