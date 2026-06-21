@@ -1,14 +1,14 @@
 package bg.softuni.warranty_tracker.validation;
 
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
-import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
+import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class ValidateProductDatesImpl implements ConstraintValidator<ValidateProductDates, RegisterProductRequest> {
+public class ValidateProductDatesImpl implements ConstraintValidator<ValidateProductDates, ProductFormRequest> {
 
     @Override
-    public boolean isValid(RegisterProductRequest request, ConstraintValidatorContext context) {
+    public boolean isValid(ProductFormRequest request, ConstraintValidatorContext context) {
 
         boolean isValid = true;
         if (request.getPurchaseDate() == null || request.getWarrantyStart() == null || request.getWarrantyEnd() == null) {

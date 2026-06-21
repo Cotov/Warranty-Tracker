@@ -11,10 +11,10 @@
         <div class="page-header">
             <h1>SYS.EDIT_PRODUCT()</h1>
             <p>Update hardware asset details in your warranty inventory</p>
-            <p class="edit-asset-label">Editing asset <span th:text="${editProductRequest.serialNumber}">—</span></p>
+            <p class="edit-asset-label">Editing asset <span th:text="${editProductRequest.productDescription + ' - ' + editProductRequest.serialNumber}">—</span></p>
         </div>
 
-        <form th:action="@{/products/{productId}(productId=${productId})}" th:object="${editProductRequest}"
+        <form th:action="@{/products/{id}(id=${editProductRequest.id})}" th:object="${editProductRequest}"
             method="post">
             <input type="hidden" name="_method" value="put" />
 
@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="vendorId">Vendor</label>
                     <select id="vendorId" th:field="*{vendorId}">
-                        <option value="">— Select vendor —</option>
+                        <option th:value="${editProductRequest.vendorId}" th:text="${editProductRequest.vendorName}"></option>
                         <option th:each="vendor : ${vendors}" th:value="${vendor.id}" th:text="${vendor.name}">
                         </option>
                         <option value="__new__">+ Add new vendor</option>

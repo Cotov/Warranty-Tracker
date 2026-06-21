@@ -13,7 +13,7 @@
             <p>Add a hardware asset to your warranty tracking inventory</p>
         </div>
         
-        <form th:action="@{/products/register}" th:object="${registerProductRequest}" method="post">
+        <form th:action="@{/products/register}" th:object="${productFormRequest}" method="post">
             <div class="form-group">
                 <label for="description">Product Description</label>
                 <input type="text" th:field="*{productDescription}" id="description" name="description"

@@ -13,5 +13,4 @@ import bg.softuni.warranty_tracker.model.entity.user.User;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findByUser(User user);
-
 }

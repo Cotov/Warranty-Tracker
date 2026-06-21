@@ -8,11 +8,11 @@ import bg.softuni.warranty_tracker.constant.ValidationMessages;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.validation.ValidateNewVendor;
 import bg.softuni.warranty_tracker.validation.ValidateProductDates;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @ValidateNewVendor
 @ValidateProductDates
-public class RegisterProductRequest {
+@Builder
+public class ProductFormRequest {
 
     @NotBlank(message = ValidationMessages.DESCRIPTION_REQUIRED)
     private String productDescription;
@@ -39,7 +40,6 @@ public class RegisterProductRequest {
     private LocalDate warrantyStart;
 
     @NotNull(message = ValidationMessages.WARRANTY_END_DATE_REQUIRED)
-    @FutureOrPresent(message = ValidationMessages.WARRANTY_END_FUTURE_OR_PRESENT)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate warrantyEnd;
 
