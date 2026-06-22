@@ -71,4 +71,12 @@ public class UserController {
         return modelAndView;
     }
 
+    @PostMapping("/logout")
+    public ModelAndView logout(HttpSession session) {
+        session.invalidate();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/users/login");
+        return modelAndView;
+    }
+
 }

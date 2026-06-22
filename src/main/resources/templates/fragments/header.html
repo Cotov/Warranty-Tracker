@@ -10,13 +10,18 @@
 
     <nav>
         <ul class="nav-links">
-            <li class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active'">
+            <li th:if="${session.userId != null}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active'">
                 <a th:href="@{/dashboard}">Dashboard</a>
-            <li class="nav-item" th:classappend="${activePage == 'login'} ? 'active'">
+            <li th:if="${session.userId == null}" class="nav-item" th:classappend="${activePage == 'login'} ? 'active'">
                 <a th:href="@{/users/login}">Sign In</a>
             </li>
-            <li class="nav-item" th:classappend="${activePage == 'register'} ? 'active'">
+            <li th:if="${session.userId == null}" class="nav-item" th:classappend="${activePage == 'register'} ? 'active'">
                 <a th:href="@{/users/register}">Register</a>
+            </li>
+            <li th:if="${session.userId != null}" class="nav-item">
+                <form th:action="@{/users/logout}" method="post">
+                    <button type="submit" class="sign-out-link">Sign Out</button>
+                </form>
             </li>
         </ul>
     </nav>
