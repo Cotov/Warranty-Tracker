@@ -46,6 +46,7 @@ public class UserController {
         }
         UUID userId = userService.register(userRegisterRequest);
         SessionUtils.setUserId(session, userId);
+        SessionUtils.setUserDto(session, userService.getById(userId));
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
@@ -64,8 +65,8 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return modelAndView;
         }
-
         UserDto userDto = userService.login(userLoginRequest);
+        SessionUtils.setUserDto(session, userDto);
         SessionUtils.setUserId(session, userDto.getId());
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;

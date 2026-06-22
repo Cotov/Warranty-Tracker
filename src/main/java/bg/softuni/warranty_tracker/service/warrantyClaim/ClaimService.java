@@ -23,7 +23,6 @@ import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
-import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 
 @Slf4j
@@ -34,8 +33,8 @@ public class ClaimService {
     private final ClaimRepository claimRepository;
     private final ClaimMapper claimMapper;
 
-    public ClaimService(ClaimRepository claimRepository, ProductMapper productMapper,
-            ClaimMapper claimMapper, ProductService productService) {
+    public ClaimService(ClaimRepository claimRepository, ClaimMapper claimMapper,
+            ProductService productService) {
         this.claimRepository = claimRepository;
         this.claimMapper = claimMapper;
         this.productService = productService;
