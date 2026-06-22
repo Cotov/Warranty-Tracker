@@ -54,8 +54,10 @@ public class ProductService {
             throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
+        if (productRepository.findBySerialNumber(productFormRequest.getSerialNumber()).isPresent()) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
         VendorDto vendorDto = resolveVendor(productFormRequest, userDto);
-
         Product product = productMapper.toProduct(productFormRequest, vendorDto, userDto);
         productRepository.save(product);
         log.info(LogMessages.PRODUCT_REGISTERED_SUCCESSFULLY);
@@ -70,6 +72,13 @@ public class ProductService {
         }
         Product existingProduct = productRepository.findById(editProductRequest.getId())
                 .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
+
+        if (productRepository
+                .findBySerialNumberAndIdNot(editProductRequest.getSerialNumber(), editProductRequest.getId())
+                .isPresent()) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
+
         verifyProductUser(existingProduct, userDto.getId());
 
         VendorDto vendorDto = resolveVendor(editProductRequest, userDto);
