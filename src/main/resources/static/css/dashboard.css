@@ -214,9 +214,9 @@ body.dashboard-page {
     letter-spacing: 0.3px;
 }
 
-.days-remaining.active { color: var(--success-color); }
-.days-remaining.expiring { color: var(--accent); }
-.days-remaining.expired { color: var(--text-muted); }
+.status-badge.ACTIVE { color: var(--success-color); }
+.status-badge.EXPIRING_SOON { color: var(--accent); }
+.status-badge.EXPIRED { color: var(--text-muted); }
 
 .status-badge {
     display: inline-block;
@@ -228,19 +228,19 @@ body.dashboard-page {
     letter-spacing: 1px;
 }
 
-.status-badge.active {
+.status-badge.ACTIVE {
     color: var(--success-color);
     background-color: var(--success-bg);
     border: 1px solid rgba(52, 211, 153, 0.25);
 }
 
-.status-badge.expiring {
+.status-badge.EXPIRING_SOON {
     color: var(--accent);
     background-color: var(--error-bg);
     border: 1px solid rgba(244, 63, 94, 0.25);
 }
 
-.status-badge.expired {
+.status-badge.EXPIRED {
     color: var(--text-muted);
     background-color: rgba(148, 163, 184, 0.08);
     border: 1px solid rgba(148, 163, 184, 0.2);

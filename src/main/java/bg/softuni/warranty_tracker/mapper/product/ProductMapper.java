@@ -57,17 +57,19 @@ public class ProductMapper {
     }
 
     public ProductDto toDto(Product product) {
-        return ProductDto.builder()
-                .id(product.getId())
-                .serialNumber(product.getSerialNumber())
-                .description(product.getDescription())
-                .purchaseDate(product.getPurchaseDate())
-                .warrantyStartDate(product.getWarrantyStartDate())
-                .warrantyEndDate(product.getWarrantyEndDate())
-                .physicalReceiptLocation(product.getPhysicalReceiptLocation())
-                .vendor(vendorMapper.toVendorDto(product.getVendor()))
-                .user(userMapper.toUserDto(product.getUser()))
-                .build();
+        return product == null ? null
+                : ProductDto.builder()
+                        .id(product.getId())
+                        .serialNumber(product.getSerialNumber())
+                        .description(product.getDescription())
+                        .purchaseDate(product.getPurchaseDate())
+                        .warrantyStartDate(product.getWarrantyStartDate())
+                        .warrantyEndDate(product.getWarrantyEndDate())
+                        .physicalReceiptLocation(product.getPhysicalReceiptLocation())
+                        .vendor(vendorMapper.toVendorDto(product.getVendor()))
+                        .user(userMapper.toUserDto(product.getUser()))
+                        .warrantyStatus(WarrantyStatus.getWarrantyStatus(product))
+                        .build();
     }
 
     public Product toProduct(ProductFormRequest productFormRequest, VendorDto vendorDto, UserDto userDto) {
@@ -102,7 +104,7 @@ public class ProductMapper {
                 : new EditProductRequest(productDto.getId(), productDto.getDescription(), productDto.getSerialNumber(),
                         productDto.getPurchaseDate(), productDto.getWarrantyStartDate(),
                         productDto.getWarrantyEndDate(), productDto.getPhysicalReceiptLocation(),
-                        productDto.getVendor().getId().toString(),null , productDto.getVendor().getName());
+                        productDto.getVendor().getId().toString(), null, productDto.getVendor().getName());
     }
 
     public Product toProduct(EditProductRequest editProductRequest, VendorDto vendorDto, UserDto userDto) {

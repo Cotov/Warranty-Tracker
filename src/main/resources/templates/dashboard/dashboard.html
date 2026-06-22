@@ -51,7 +51,7 @@
                             <span class="warranty-date"
                                 th:text="${#temporals.format(product.warrantyEndDate, 'dd MMM yyyy')}"></span>
                         </td>
-                        <td><span class="status-badge expiring">To be implemented</span></td>
+                        <td><span class="status-badge" th:classappend="${product.warrantyStatus.name()}" th:text="${product.warrantyStatus.name()}"></span></td>
                         <td class="col-actions">
                             <a th:href="@{/products/{productId}/edit(productId=${product.id})}"
                                 class="action-link">Edit</a>
