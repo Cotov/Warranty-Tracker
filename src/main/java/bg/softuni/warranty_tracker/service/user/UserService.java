@@ -21,7 +21,6 @@ import bg.softuni.warranty_tracker.constant.LogMessages;
 
 @Slf4j
 @Service
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -34,6 +33,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    @Transactional
     public UUID register(UserRegisterRequest userRegisterRequest) {
 
         userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {

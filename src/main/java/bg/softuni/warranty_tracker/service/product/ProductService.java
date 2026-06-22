@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -48,6 +47,7 @@ public class ProductService {
         return productMapper.toDtos(productEntities);
     }
 
+    @Transactional
     public ProductDto registerProduct(ProductFormRequest productFormRequest, UserDto userDto) {
 
         if (productFormRequest == null || userDto == null) {
@@ -63,6 +63,7 @@ public class ProductService {
 
     }
 
+    @Transactional
     public void updateProduct(EditProductRequest editProductRequest, UserDto userDto) {
         if (editProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
@@ -77,6 +78,7 @@ public class ProductService {
         log.info(LogMessages.PRODUCT_UPDATED_SUCCESSFULLY, product.getId());
     }
 
+    @Transactional
     public void deleteProductById(String id, UserDto userDto) {
 
         Product product = productRepository.findById(UUID.fromString(id)).orElse(null);
@@ -133,7 +135,7 @@ public class ProductService {
     }
 
     // helpers
-    //todo refactor to use UUID
+    // todo refactor to use UUID
     public void verifyProductUser(Product product, UUID userId) {
         if (product == null) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);
