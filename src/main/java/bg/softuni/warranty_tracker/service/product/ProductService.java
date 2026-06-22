@@ -133,12 +133,19 @@ public class ProductService {
     }
 
     // helpers
-    private void verifyProductUser(Product product, UUID userId) {
+    //todo refactor to use UUID
+    public void verifyProductUser(Product product, UUID userId) {
         if (product == null) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);
         } else if (!userId.equals(product.getUser().getId())) {
             throw new RuntimeException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
         }
+    }
+
+    public void verifyProductUser(UUID productId, UUID userId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
+        verifyProductUser(product, userId);
     }
 
     public List<VendorDto> getVendorsForEditProduct(String productId, UserDto userDto) {

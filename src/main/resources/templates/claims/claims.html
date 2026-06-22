@@ -38,8 +38,8 @@
                     <tr th:each="claim : ${claims}">
                         <td class="col-date" th:text="${claim.dateFiled}"></td>
                         <td class="col-description" th:text="${claim.faultDescription}"></td>
-                        <td><span class="status-badge pending" th:text="${claim.status}"></span></td>
-                        <td class="col-actions"><a href="#" class="action-link">Edit</a></td>
+                        <td><span class="status-badge " th:classappend="${claim.status.name().toLowerCase()}" th:text="${claim.status}"></span></td>
+                        <td class="col-actions"><a th:href="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}" class="action-link">Edit</a></td>
                     </tr>
                 </tbody>
             </table>

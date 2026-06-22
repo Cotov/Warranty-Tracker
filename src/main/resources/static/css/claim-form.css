@@ -177,24 +177,39 @@ body.claim-form-page {
     letter-spacing: 1px;
 }
 
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 12px 14px;
     font-size: 13px;
-    line-height: 1.6;
     background-color: #090d16;
     color: var(--text-main);
     border: 1px solid #2d3748;
     border-radius: 4px;
     outline: none;
-    resize: vertical;
-    min-height: 120px;
     transition: all 0.2s ease;
     font-family: inherit;
     letter-spacing: 0.3px;
 }
 
-.form-group textarea:focus {
+.form-group textarea {
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    color-scheme: dark;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
     border-color: var(--border-focus);
     box-shadow: 0 0 12px var(--primary-glow);
     background-color: #0d1527;
@@ -256,13 +271,35 @@ body.claim-form-page {
     cursor: not-allowed;
 }
 
+.btn-mutate {
+    width: 100%;
+    padding: 14px;
+    background-color: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
+    font-family: inherit;
+}
+
+.btn-mutate:hover {
+    background-color: var(--primary);
+    color: var(--bg-color);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+}
+
 /* ── Claim details (edit claim) ── */
 .claim-details {
     background-color: rgba(9, 13, 22, 0.3);
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 18px 20px;
-    margin-bottom: 28px;
 }
 
 .claim-details-header {
@@ -302,11 +339,23 @@ body.claim-form-page {
     border: 1px solid rgba(56, 189, 248, 0.25);
 }
 
+.status-badge.resolved {
+    color: var(--success-color);
+    background-color: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.status-badge.rejected {
+    color: var(--text-muted);
+    background-color: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
 .claim-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 .claim-meta-field label {

@@ -35,16 +35,13 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = ValidationMessages.STATUS_REQUIRED)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ClaimStatus status;
 
-    @NotEmpty(message = ValidationMessages.FAULT_DESCRIPTION_REQUIRED)
     @Column(nullable = false)
     private String faultDescription;
 
-    @NotNull(message = ValidationMessages.DATE_FILED_REQUIRED)
     @Column(nullable = false)
     private LocalDate dateFiled;
 

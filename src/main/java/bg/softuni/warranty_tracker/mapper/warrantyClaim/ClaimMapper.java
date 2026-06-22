@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.Claim;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
@@ -37,6 +38,15 @@ public class ClaimMapper {
                         .status(ClaimStatus.PENDING)
                         .dateFiled(LocalDate.now())
                         .product(productMapper.toProduct(addClaimRequest.getProduct()))
+                        .build();
+    }
+
+    public EditClaimRequest toEditClaimRequest(ClaimDto claimDto) {
+        return claimDto == null ? null
+                : EditClaimRequest.builder()
+                        .id(claimDto.getId())
+                        .status(claimDto.getStatus())
+                        .faultDescription(claimDto.getFaultDescription())
                         .build();
     }
 }

@@ -4,98 +4,70 @@
 <head th:replace="~{fragments/head :: head('Edit Claim | Warranty Tracker', '/css/claim-form.css')}"></head>
 
 <body class="claim-form-page">
-
     <div th:replace="~{fragments/header :: header('dashboard')}"></div>
-
     <div class="claim-form-container">
-
-        <a href="#" class="back-link">Back to Claims</a>
-
+        <a th:href="@{/products/{productId}/claims(productId=${product.id})}" class="back-link">Back to Claims</a>
         <div class="page-header">
             <h1>SYS.EDIT_CLAIM()</h1>
-            <p>Update the status of this warranty claim.</p>
+            <p>Update the fault description and/or status of this warranty claim.</p>
         </div>
-
         <div class="product-context">
             <div class="product-context-label">// product</div>
             <div class="product-context-grid">
                 <div class="product-context-field">
                     <label>Description</label>
-                    <span>MacBook Pro 14" M3</span>
+                    <span th:text="${product.description}"></span>
                 </div>
                 <div class="product-context-field">
                     <label>Serial #</label>
-                    <span>C02XG2JHJGH5</span>
+                    <span th:text="${product.serialNumber}"></span>
                 </div>
                 <div class="product-context-field">
                     <label>Warranty Ends</label>
-                    <span>15 Aug 2026</span>
+                    <span th:text="${product.warrantyEndDate}"></span>
                 </div>
             </div>
         </div>
-
         <div class="claim-details">
             <div class="claim-details-header">
                 <span class="claim-details-label">// claim</span>
-                <!-- Status badge class: pending | active -->
-                <span class="status-badge pending">Pending</span>
+                <span class="status-badge" th:classappend="${claim.status.name().toLowerCase()}"
+                    th:text="${claim.status}"></span>
             </div>
             <div class="claim-meta">
                 <div class="claim-meta-field">
                     <label>Submitted</label>
-                    <span>14 Jun 2026</span>
-                </div>
-                <div class="claim-meta-field">
-                    <label>Claim ID</label>
-                    <span class="claim-id">a3f2c1d8-...</span>
+                    <span th:text="${claim.dateFiled}"></span>
                 </div>
             </div>
-            <div class="claim-description-block">
-                <label>Fault Description</label>
-                <p>Battery drains to 0% within 2 hours of normal use even after a full charge cycle.</p>
-            </div>
-        </div>
-
-        <hr class="section-divider">
-        <p class="section-title">// update status</p>
-
-        <div class="action-buttons">
-
-            <!-- PENDING → ACTIVE (show when status is PENDING) -->
-            <form action="#" method="post">
-                <input type="hidden" name="newStatus" value="ACTIVE">
-                <button type="submit" class="btn-action mark-active">
-                    <span>Mark Active</span>
-                    <span class="btn-desc">Claim accepted — repair in progress</span>
-                </button>
+            <form
+                th:action="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}"
+                th:object="${editClaimRequest}" method="post">
+                <input type="hidden" name="_method" value="put" />
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-group">
+                    <label for="faultDescription">Fault Description</label>
+                    <textarea id="faultDescription" th:field="*{faultDescription}"
+                        th:classappend="${#fields.hasErrors('faultDescription')} ? 'input-error' : ''"></textarea>
+                    <span class="error-message"
+                        th:classappend="${#fields.hasErrors('faultDescription')} ? 'is-visible' : ''"
+                        th:errors="*{faultDescription}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" th:field="*{status}">
+                        <option th:each="s : ${validStatusTransitions}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                    <span class="error-message" th:classappend="${#fields.hasErrors('status')} ? 'is-visible' : ''"
+                        th:errors="*{status}"></span>
+                </div>
+                <button type="submit" class="btn-mutate">MUTATE()</button>
             </form>
-
-            <!-- ACTIVE → RESOLVED (show when status is ACTIVE) -->
-            <!-- <form action="#" method="post">
-                <input type="hidden" name="newStatus" value="RESOLVED">
-                <button type="submit" class="btn-action mark-resolved">
-                    <span>Mark Resolved</span>
-                    <span class="btn-desc">Issue fixed — claim closed successfully</span>
-                </button>
-            </form> -->
-
-            <!-- PENDING or ACTIVE → REJECTED (always shown) -->
-            <form action="#" method="post">
-                <input type="hidden" name="newStatus" value="REJECTED">
-                <button type="submit" class="btn-action mark-rejected">
-                    <span>Reject Claim</span>
-                    <span class="btn-desc">Claim denied — no further action</span>
-                </button>
-            </form>
-
         </div>
-
         <div class="footer-text">
-            <a href="#">← Back to Claims</a>
+            <a th:href="@{/products/{productId}/claims(productId=${product.id})}">← Back to Claims</a>
         </div>
-
     </div>
-
 </body>
 
 </html>
