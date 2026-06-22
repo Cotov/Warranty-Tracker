@@ -19,17 +19,6 @@ public class ClaimMapper {
         this.productMapper = productMapper;
     }
 
-    public Claim toClaim(ClaimDto claimDto) {
-        return claimDto == null ? null
-                : Claim.builder()
-                        .id(claimDto.getId())
-                        .status(claimDto.getStatus())
-                        .faultDescription(claimDto.getFaultDescription())
-                        .dateFiled(claimDto.getDateFiled())
-                        .product(productMapper.toProduct(claimDto.getProduct()))
-                        .build();
-    }
-
     public ClaimDto toClaimDto(Claim claim) {
         return claim == null ? null
                 : ClaimDto.builder()

@@ -17,7 +17,6 @@
                 <p th:text="${product.description} + ' · SN: ' + ${product.serialNumber}"></p>
                 <p class="claim-count" th:text="${claims.size()} + ' claim(s) on record'"></p>
             </div>
-            <a href="#" class="btn-primary">+ Add Claim</a>
         </div>
 
         <!-- Blocked banner — shown when a PENDING or ACTIVE claim exists -->
@@ -49,8 +48,9 @@
         <!-- Empty state — shown when no claims exist -->
         <div class="empty-state">
             <p th:text="${claims.size() == 0 ? 'No warranty claims have been filed for this product.' : ''}"></p>
-            <a th:href="@{/products/{productId}/claims/add(productId=${product.id})}" class="btn-primary">+ Add
-                Claim</a>
+            <a th:href="${hasActiveClaim} ? '#' : @{/products/{productId}/claims/add(productId=${product.id})}"
+               th:classappend="${hasActiveClaim} ? 'btn-disabled'"
+               class="btn-primary">+ Add Claim</a>
         </div>
 
     </main>

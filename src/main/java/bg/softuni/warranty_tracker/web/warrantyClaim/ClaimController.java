@@ -65,8 +65,12 @@ public class ClaimController {
         AddClaimRequest addClaimRequest = AddClaimRequest.builder()
                 .product(product)
                 .build();
-
         modelAndView.addObject("addClaimRequest", addClaimRequest);
+
+        List<ClaimDto> claims = claimService.getClaims(productId, userDto);
+        boolean hasActiveClaim = claimService.hasActiveClaim(claims);
+        modelAndView.addObject("hasActiveClaim", hasActiveClaim);
+
         return modelAndView;
     }
 
@@ -81,6 +85,9 @@ public class ClaimController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("claims/add-claim");
             modelAndView.addObject("addClaimRequest", addClaimRequest);
+            List<ClaimDto> claims = claimService.getClaims(productId, userDto);
+            boolean hasActiveClaim = claimService.hasActiveClaim(claims);
+            modelAndView.addObject("hasActiveClaim", hasActiveClaim);
             return modelAndView;
         }
         claimService.addClaim(addClaimRequest);

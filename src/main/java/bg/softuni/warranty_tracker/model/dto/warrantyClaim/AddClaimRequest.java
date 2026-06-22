@@ -1,10 +1,7 @@
 package bg.softuni.warranty_tracker.model.dto.warrantyClaim;
 
-import java.time.LocalDate;
-
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
-import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
