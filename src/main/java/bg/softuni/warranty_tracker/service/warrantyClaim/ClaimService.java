@@ -122,6 +122,14 @@ public class ClaimService {
         productService.verifyProductUser(claim.getProduct(), userId);
     }
 
+    public void deleteClaimById(String claimId, UserDto userDto) {
+        Claim claim = claimRepository.findById(UUID.fromString(claimId))
+                .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
+        verifyClaimUser(claim, userDto.getId());
+        claimRepository.delete(claim);
+        log.info("Claim deleted successfully: {}", claim.getId());
+    }
+
     private static final Map<ClaimStatus, Set<ClaimStatus>> INVALID_STATUS_TRANSITIONS = Map.of(
         ClaimStatus.PENDING, Set.of(ClaimStatus.RESOLVED),
         ClaimStatus.ACTIVE, Set.of(ClaimStatus.PENDING),

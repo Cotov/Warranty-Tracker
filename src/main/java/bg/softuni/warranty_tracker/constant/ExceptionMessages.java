@@ -19,4 +19,5 @@ public class ExceptionMessages {
     public static final String CLAIM_NOT_FOUND = "Claim not found";
     public static final String UPDATE_CLAIM_FAILED = "Update claim failed - request or user dto null";
     public static final String INVALID_STATUS_TRANSITION = "Invalid status transition";
+    public static final String PRODUCT_HAS_ACTIVE_CLAIM = "Product has active or pending claim";
 }

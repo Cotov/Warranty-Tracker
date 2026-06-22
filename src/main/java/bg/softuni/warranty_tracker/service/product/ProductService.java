@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,13 @@ import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.repository.product.ProductRepository;
 import bg.softuni.warranty_tracker.service.vendor.VendorService;
 import lombok.extern.slf4j.Slf4j;
+import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 
 @Slf4j
 @Service
@@ -32,13 +35,15 @@ public class ProductService {
     private final UserMapper userMapper;
     private final ProductMapper productMapper;
     private final VendorService vendorService;
+    private final ClaimService claimService;
 
     public ProductService(ProductRepository productRepository, UserMapper userMapper, ProductMapper productMapper,
-            VendorService vendorService) {
+            VendorService vendorService, @org.springframework.context.annotation.Lazy ClaimService claimService) {
         this.productRepository = productRepository;
         this.userMapper = userMapper;
         this.productMapper = productMapper;
         this.vendorService = vendorService;
+        this.claimService = claimService;
     }
 
     public List<ProductDto> getAllProducts(UserDto userDto) {
@@ -93,6 +98,12 @@ public class ProductService {
         Product product = productRepository.findById(UUID.fromString(id)).orElse(null);
 
         verifyProductUser(product, userDto.getId());
+        List<ClaimDto> claims = claimService.getClaims(product.getId().toString(), userDto);
+        if (claimService.hasActiveClaim(claims)) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_HAS_ACTIVE_CLAIM);
+        } else if (claims.size() > 0) {
+            claims.forEach(claim -> claimService.deleteClaimById(claim.getId().toString(), userDto));
+        }
 
         productRepository.delete(product);
         log.info("Product deleted: " + product.getId());
