@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <header class="global-header" th:fragment="header(activePage)">
-    <a th:href="@{/}" class="logo-container">
+    <a th:href="@{/dashboard}" class="logo-container">
         <span class="logo-bolt">⚡</span>
         <span class="logo-text-blue">WNT</span>
         <span class="logo-text-purple">.TRK</span>
@@ -12,10 +12,6 @@
         <ul class="nav-links">
             <li class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active'">
                 <a th:href="@{/dashboard}">Dashboard</a>
-            </li>
-            <li class="nav-item" th:classappend="${activePage == 'claims'} ? 'active'">
-                <a th:href="@{/claims}">Claims Center</a>
-            </li>
             <li class="nav-item" th:classappend="${activePage == 'login'} ? 'active'">
                 <a th:href="@{/users/login}">Sign In</a>
             </li>

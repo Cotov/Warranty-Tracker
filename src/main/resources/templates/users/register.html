@@ -55,6 +55,14 @@
                   th:errors="*{password}">[!] CRITERIA FAILED</span>
         </div>
 
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Security Cryptokey</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="••••••••"
+                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'input-error'">
+            <span class="error-message" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-visible'"
+                  th:errors="*{confirmPassword}">[!] CRITERIA FAILED</span>
+        </div>
+
         <button type="submit" class="btn-submit">Execute Registration</button>
     </form>
 

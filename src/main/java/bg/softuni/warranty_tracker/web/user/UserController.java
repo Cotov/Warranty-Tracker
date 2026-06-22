@@ -43,7 +43,7 @@ public class UserController {
             return modelAndView;
         }
         userService.register(userRegisterRequest);
-        modelAndView.setViewName("redirect:/dashboard/dashboard"); // redirects where?
+        modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
 
@@ -59,7 +59,7 @@ public class UserController {
             HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("users/login");
         if (bindingResult.hasErrors()) {
-            return modelAndView; // how does this keep the errors from the failed login?
+            return modelAndView;
         }
 
         UserDto userDto = userService.login(userLoginRequest);

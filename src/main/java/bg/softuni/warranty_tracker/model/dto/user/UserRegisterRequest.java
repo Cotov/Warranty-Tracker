@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
+import bg.softuni.warranty_tracker.validation.ValidateRegisterUser;
 
+@ValidateRegisterUser
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +22,10 @@ public class UserRegisterRequest {
     @NotBlank(message = ValidationMessages.PASSWORD_REQUIRED)
     @Size(min = 6, max = 20, message = ValidationMessages.PASSWORD_LENGTH)
     private String password;
+
+    @NotBlank(message = ValidationMessages.CONFIRM_PASSWORD_REQUIRED)
+    @Size(min = 6, max = 20, message = ValidationMessages.PASSWORD_LENGTH)
+    private String confirmPassword;
     
     @NotBlank(message = ValidationMessages.EMAIL_REQUIRED)
     @Email
