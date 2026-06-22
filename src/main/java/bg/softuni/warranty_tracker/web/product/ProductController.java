@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
+import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
 import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
@@ -37,11 +38,13 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final VendorService vendorService;
+    private final ProductMapper productMapper;
 
-    public ProductController(UserService userService, VendorService vendorService, ProductService productService) {
+    public ProductController(UserService userService, VendorService vendorService, ProductService productService, ProductMapper productMapper) {
         this.userService = userService;
         this.vendorService = vendorService;
         this.productService = productService;
+        this.productMapper = productMapper;
     }
 
     @GetMapping("/register")
@@ -92,7 +95,8 @@ public class ProductController {
     public ModelAndView getProduct(@PathVariable String productId, HttpSession session) {
         UserDto userDto = userService.getById(SessionUtils.getUserId(session));
         ProductDto productDto = productService.getById(productId, userDto);
-        EditProductRequest editProductRequest = productService.getEditProductRequest(productDto);
+        EditProductRequest editProductRequest = productMapper.toEditProductRequest(productDto);
+        editProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
         List<VendorDto> vendors = productService.getVendorsForEditProduct(productId, userDto);
 
         ModelAndView modelAndView = new ModelAndView();

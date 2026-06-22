@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Claims | Warranty Tracker', '/css/claims.css')}"></head>
+
+<body class="claims-page">
+
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
+
+    <main class="claims-container">
+
+        <a href="#" class="back-link">Back to Dashboard</a>
+
+        <div class="page-top">
+            <div class="page-header">
+                <h1>SYS.CLAIMS()</h1>
+                <p th:text="${product.description} + ' · SN: ' + ${product.serialNumber}"></p>
+                <p class="claim-count" th:text="${claims.size()} + ' claim(s) on record'"></p>
+            </div>
+        </div>
+
+        <!-- Blocked banner — shown when a PENDING or ACTIVE claim exists -->
+        <div class="claim-blocked-banner" th:if="${hasActiveClaim}"
+            th:text="${hasActiveClaim ? '[!] [!] [!] Claim blocked — a claim is currently <strong>open</strong> for this product. Resolve or close the existing claim before filing a new one.' : ''}">
+        </div>
+
+        <div class="table-wrapper">
+            <table class="claims-table">
+                <thead>
+                    <tr>
+                        <th>Submitted</th>
+                        <th>Fault Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="claim : ${claims}">
+                        <td class="col-date" th:text="${claim.dateFiled}"></td>
+                        <td class="col-description" th:text="${claim.faultDescription}"></td>
+                        <td><span class="status-badge " th:classappend="${claim.status.name().toLowerCase()}" th:text="${claim.status}"></span></td>
+                        <td class="col-actions"><a th:href="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}" class="action-link">Edit</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty state — shown when no claims exist -->
+        <div class="empty-state">
+            <p th:text="${claims.size() == 0 ? 'No warranty claims have been filed for this product.' : ''}"></p>
+            <a th:href="${hasActiveClaim} ? '#' : @{/products/{productId}/claims/add(productId=${product.id})}"
+               th:classappend="${hasActiveClaim} ? 'btn-disabled'"
+               class="btn-primary">+ Add Claim</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

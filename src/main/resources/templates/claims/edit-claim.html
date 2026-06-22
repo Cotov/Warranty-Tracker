@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Edit Claim | Warranty Tracker', '/css/claim-form.css')}"></head>
+
+<body class="claim-form-page">
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
+    <div class="claim-form-container">
+        <a th:href="@{/products/{productId}/claims(productId=${product.id})}" class="back-link">Back to Claims</a>
+        <div class="page-header">
+            <h1>SYS.EDIT_CLAIM()</h1>
+            <p>Update the fault description and/or status of this warranty claim.</p>
+        </div>
+        <div class="product-context">
+            <div class="product-context-label">// product</div>
+            <div class="product-context-grid">
+                <div class="product-context-field">
+                    <label>Description</label>
+                    <span th:text="${product.description}"></span>
+                </div>
+                <div class="product-context-field">
+                    <label>Serial #</label>
+                    <span th:text="${product.serialNumber}"></span>
+                </div>
+                <div class="product-context-field">
+                    <label>Warranty Ends</label>
+                    <span th:text="${product.warrantyEndDate}"></span>
+                </div>
+            </div>
+        </div>
+        <div class="claim-details">
+            <div class="claim-details-header">
+                <span class="claim-details-label">// claim</span>
+                <span class="status-badge" th:classappend="${claim.status.name().toLowerCase()}"
+                    th:text="${claim.status}"></span>
+            </div>
+            <div class="claim-meta">
+                <div class="claim-meta-field">
+                    <label>Submitted</label>
+                    <span th:text="${claim.dateFiled}"></span>
+                </div>
+            </div>
+            <form
+                th:action="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}"
+                th:object="${editClaimRequest}" method="post">
+                <input type="hidden" name="_method" value="put" />
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-group">
+                    <label for="faultDescription">Fault Description</label>
+                    <textarea id="faultDescription" th:field="*{faultDescription}"
+                        th:classappend="${#fields.hasErrors('faultDescription')} ? 'input-error' : ''"></textarea>
+                    <span class="error-message"
+                        th:classappend="${#fields.hasErrors('faultDescription')} ? 'is-visible' : ''"
+                        th:errors="*{faultDescription}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" th:field="*{status}">
+                        <option th:each="s : ${validStatusTransitions}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                    <span class="error-message" th:classappend="${#fields.hasErrors('status')} ? 'is-visible' : ''"
+                        th:errors="*{status}"></span>
+                </div>
+                <button type="submit" class="btn-mutate">MUTATE()</button>
+            </form>
+        </div>
+        <div class="footer-text">
+            <a th:href="@{/products/{productId}/claims(productId=${product.id})}">← Back to Claims</a>
+        </div>
+    </div>
+</body>
+
+</html>

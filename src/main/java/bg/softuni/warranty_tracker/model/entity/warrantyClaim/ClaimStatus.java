@@ -1,8 +1,8 @@
 package bg.softuni.warranty_tracker.model.entity.warrantyClaim;
 
-public enum WarrantyClaimStatus {
+public enum ClaimStatus {
     PENDING,
+    REJECTED,
     ACTIVE,
-    RESOLVED,
-    REJECTED
+    RESOLVED
 }

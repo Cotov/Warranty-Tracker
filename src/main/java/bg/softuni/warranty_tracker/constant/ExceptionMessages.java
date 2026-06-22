@@ -13,5 +13,9 @@ public class ExceptionMessages {
     public static final String PRODUCT_NOT_FOUND = "Product not found";
     public static final String PRODUCT_FORM_NULL = "ProductForm object was null";
     public static final String FAILED_TO_MAP_PRODUCT_TO_EDIT_REQUEST = "Failed to map product to edit request";
-
+    public static final String ADD_CLAIM_FAILED = "Add claim failed - request or product null";
+    public static final String ACTIVE_CLAIM_EXISTS = "Active claim exists for this product";
+    public static final String CLAIM_NOT_FOUND = "Claim not found";
+    public static final String UPDATE_CLAIM_FAILED = "Update claim failed - request or user dto null";
+    public static final String INVALID_STATUS_TRANSITION = "Invalid status transition";
 }
