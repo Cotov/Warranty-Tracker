@@ -1,5 +1,7 @@
 package bg.softuni.warranty_tracker.web.user;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,14 +37,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute UserRegisterRequest userRegisterRequest,
-            BindingResult bindingResult) {
+            BindingResult bindingResult, HttpSession session) {
 
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("users/register");
             return modelAndView;
         }
-        userService.register(userRegisterRequest);
+        UUID userId = userService.register(userRegisterRequest);
+        SessionUtils.setUserId(session, userId);
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }

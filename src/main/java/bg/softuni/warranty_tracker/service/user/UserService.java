@@ -34,7 +34,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public void register(UserRegisterRequest userRegisterRequest) {
+    public UUID register(UserRegisterRequest userRegisterRequest) {
 
         userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {
             throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
@@ -45,6 +45,7 @@ public class UserService {
 
         userRepository.save(user);
         log.info(LogMessages.USER_REGISTERED_SUCCESSFULLY, user.getUsername());
+        return user.getId();
     }
 
     public UserDto login(UserLoginRequest userLoginRequest) {
