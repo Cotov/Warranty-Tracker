@@ -17,6 +17,7 @@ public class UserRegisterRequest {
 
     @NotBlank(message = ValidationMessages.USERNAME_REQUIRED)
     @Size(min = 6, max = 20, message = ValidationMessages.USERNAME_LENGTH)
+    
     private String username;
 
     @NotBlank(message = ValidationMessages.PASSWORD_REQUIRED)

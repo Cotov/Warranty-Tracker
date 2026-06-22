@@ -3,8 +3,6 @@ package bg.softuni.warranty_tracker.service.warrantyClaim;
 import bg.softuni.warranty_tracker.service.product.ProductService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +18,8 @@ import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
-import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.Claim;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
-import bg.softuni.warranty_tracker.repository.product.ProductRepository;
 import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
@@ -36,13 +32,11 @@ public class ClaimService {
 
     private final ProductService productService;
     private final ClaimRepository claimRepository;
-    private final ProductMapper productMapper;
     private final ClaimMapper claimMapper;
 
     public ClaimService(ClaimRepository claimRepository, ProductMapper productMapper,
             ClaimMapper claimMapper, ProductService productService) {
         this.claimRepository = claimRepository;
-        this.productMapper = productMapper;
         this.claimMapper = claimMapper;
         this.productService = productService;
     }

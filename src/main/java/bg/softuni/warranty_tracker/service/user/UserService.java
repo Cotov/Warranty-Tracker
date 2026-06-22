@@ -40,6 +40,10 @@ public class UserService {
             throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
         });
 
+        userRepository.findByEmail(userRegisterRequest.getEmail()).ifPresent(user -> {
+            throw new RuntimeException(ErrorMessages.EMAIL_ALREADY_EXISTS);
+        });
+
         String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword());
         User user = userMapper.toUser(userRegisterRequest, encodedPassword);
 
