@@ -11,23 +11,7 @@
             <h1>SYS.EDIT_CLAIM()</h1>
             <p>Update the fault description and/or status of this warranty claim.</p>
         </div>
-        <div class="product-context">
-            <div class="product-context-label">// product</div>
-            <div class="product-context-grid">
-                <div class="product-context-field">
-                    <label>Description</label>
-                    <span th:text="${product.description}"></span>
-                </div>
-                <div class="product-context-field">
-                    <label>Serial #</label>
-                    <span th:text="${product.serialNumber}"></span>
-                </div>
-                <div class="product-context-field">
-                    <label>Warranty Ends</label>
-                    <span th:text="${product.warrantyEndDate}"></span>
-                </div>
-            </div>
-        </div>
+        <div th:replace="~{fragments/claim-fragments :: productContext(${product})}"></div>
         <div class="claim-details">
             <div class="claim-details-header">
                 <span class="claim-details-label">// claim</span>

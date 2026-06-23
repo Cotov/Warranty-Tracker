@@ -28,31 +28,6 @@ body.register-product-page {
     margin-bottom: 28px;
 }
 
-.page-header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.page-header h1::before {
-    content: '> ';
-    color: var(--primary);
-}
-
-.page-header p {
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
-.form-row {
-    display: flex;
-    gap: 16px;
-}
-
 .form-group {
     flex: 1;
     display: flex;
@@ -120,74 +95,6 @@ body.register-product-page {
     background-color: rgba(244, 63, 94, 0.02);
 }
 
-.error-message {
-    color: var(--error-color);
-    font-size: 11px;
-    margin-top: 6px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    display: none;
-}
-
-.error-message.is-visible {
-    display: block;
-}
-
-.vendor-create-panel {
-    display: none;
-    background-color: rgba(9, 13, 22, 0.5);
-    border: 1px dashed rgba(56, 189, 248, 0.35);
-    border-left: 3px solid var(--primary);
-    border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 22px;
-}
-
-.vendor-create-panel.is-visible {
-    display: block;
-}
-
-.vendor-create-panel-header {
-    margin-bottom: 18px;
-}
-
-.vendor-create-panel-header h2 {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--primary);
-    margin-bottom: 4px;
-}
-
-.vendor-create-panel-header h2::before {
-    content: '+ ';
-}
-
-.vendor-create-panel-header p {
-    font-size: 11px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
-.vendor-create-panel .form-group {
-    margin-bottom: 18px;
-}
-
-.vendor-create-panel .form-row .form-group {
-    margin-bottom: 18px;
-}
-
-.vendor-create-note {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    opacity: 0.7;
-}
-
 .btn-submit {
     width: 100%;
     padding: 14px;
@@ -208,24 +115,6 @@ body.register-product-page {
     background-color: var(--primary);
     color: var(--bg-color);
     box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
-}
-
-.footer-text {
-    text-align: center;
-    margin-top: 28px;
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
-.footer-text a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.footer-text a:hover {
-    text-decoration: underline;
 }
 
 @media (max-width: 640px) {

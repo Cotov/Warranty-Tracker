@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="product-context" th:fragment="productContext(product)">
+    <div class="product-context-label">// product</div>
+    <div class="product-context-grid">
+        <div class="product-context-field">
+            <label>Description</label>
+            <span th:text="${product.description}"></span>
+        </div>
+        <div class="product-context-field">
+            <label>Serial #</label>
+            <span th:text="${product.serialNumber}"></span>
+        </div>
+        <div class="product-context-field">
+            <label>Warranty Ends</label>
+            <span th:text="${product.warrantyEndDate}"></span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

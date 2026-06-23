@@ -16,33 +16,12 @@
             <p>File a new warranty claim for this product.</p>
         </div>
 
-        <div class="product-context">
-            <div class="product-context-label">// product</div>
-            <div class="product-context-grid">
-                <div class="product-context-field">
-                    <label>Description</label>
-                    <span th:text="${addClaimRequest.product.description}"></span>
-                </div>
-                <div class="product-context-field">
-                    <label>Serial #</label>
-                    <span th:text="${addClaimRequest.product.serialNumber}"></span>
-                </div>
-                <div class="product-context-field">
-                    <label>Warranty Ends</label>
-                    <span th:text="${addClaimRequest.product.warrantyEndDate}"></span>
-                </div>
-            </div>
-        </div>
+        <div th:replace="~{fragments/claim-fragments :: productContext(${addClaimRequest.product})}"></div>
 
         <div class="status-note">
             <span>Initial status will be set to</span>
             <span class="status-badge-sm">Pending</span>
         </div>
-
-        <!-- Business rule error banner — shown when warranty expired or open claim exists -->
-        <!-- <div class="error-banner">
-            <strong>[!] Claim blocked</strong> — <span>error message here</span>
-        </div> -->
 
         <form th:action="@{/products/{productId}/claims/add(productId=${addClaimRequest.product.id})}" th:object="${addClaimRequest}" method="post">
 
@@ -51,7 +30,6 @@
                 <textarea id="faultDescription" name="faultDescription"
                           placeholder="Describe the fault or issue in detail..." th:field="*{faultDescription}"></textarea>
                 <span class="form-hint">Be specific — include when the issue occurs and how to reproduce it.</span>
-                <!-- Validation error — add class 'input-error' to textarea and 'is-visible' to span -->
                 <span class="error-message" th:classappend="${#fields.hasErrors('faultDescription')} ? 'is-visible' : ''"
                 th:errors="*{faultDescription}"></span>
             </div>

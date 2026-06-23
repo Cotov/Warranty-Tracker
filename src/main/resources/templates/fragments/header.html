@@ -12,6 +12,7 @@
         <ul class="nav-links">
             <li th:if="${session.userId != null}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active'">
                 <a th:href="@{/dashboard}">Dashboard</a>
+            </li>
             <li th:if="${session.userId == null}" class="nav-item" th:classappend="${activePage == 'login'} ? 'active'">
                 <a th:href="@{/users/login}">Sign In</a>
             </li>
