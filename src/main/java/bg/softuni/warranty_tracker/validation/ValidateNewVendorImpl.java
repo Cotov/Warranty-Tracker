@@ -1,20 +1,24 @@
 package bg.softuni.warranty_tracker.validation;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.ValidationMessages;
-import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
-public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVendor, ProductFormRequest> {
+@Component
+public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVendor, RegisterProductRequest> {
 
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    @Autowired
+    private Validator validator;
 
     @Override
-    public boolean isValid(ProductFormRequest request, ConstraintValidatorContext context) {
+    public boolean isValid(RegisterProductRequest request, ConstraintValidatorContext context) {
         if (request == null) {
             return true;
         }
@@ -61,10 +65,10 @@ public class ValidateNewVendorImpl implements ConstraintValidator<ValidateNewVen
     }
 
     private boolean isValidEmail(String email) {
-        return VALIDATOR.validateValue(RegisterVendorRequest.class, "email", email).isEmpty();
+        return validator.validateValue(RegisterVendorRequest.class, "email", email).isEmpty();
     }
 
     private boolean isValidWebsite(String website) {
-        return VALIDATOR.validateValue(RegisterVendorRequest.class, "website", website).isEmpty();
+        return validator.validateValue(RegisterVendorRequest.class, "website", website).isEmpty();
     }
 }

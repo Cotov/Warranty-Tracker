@@ -10,6 +10,8 @@ public class ValidationMessages {
     //todo constraint numbers in constants
     public static final String USERNAME_LENGTH = "Username must be between 6 and 20 characters";
     public static final String PASSWORD_LENGTH = "Password must be between 6 and 20 characters";
+    public static final String CONFIRM_PASSWORD_REQUIRED = "Confirm password is required";
+    public static final String CONFIRM_PASSWORD_MATCH = "Confirm password must match password";
     public static final String FIRST_NAME_REQUIRED = "First name is required";
     public static final String FIRST_NAME_LENGTH = "First name must be between 2 and 20 characters";
     public static final String LAST_NAME_REQUIRED = "Last name is required";
@@ -37,7 +39,7 @@ public class ValidationMessages {
     public static final String PURCHASE_DATE_PAST_OR_PRESENT = "Pusrchase date cannot be in the future";
     public static final String WARRANTY_END_FUTURE_OR_PRESENT = "Warranty end cannot be in the past";
     public static final String INVALID_PRODUCT_DATES = "Product Dates are invalid";
-    public static final String WARRANTY_START_CANNOT_BE_BEFORE_START = "Warranty start date must be before warranty end date";
+    public static final String WARRANTY_START_CANNOT_BE_BEFORE_END = "Warranty start date must be before warranty end date";
 
     //Vendor
     public static final String VENDOR_REQUIRED = "Vendor name is required";

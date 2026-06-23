@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
+import bg.softuni.warranty_tracker.mapper.product.WarrantyStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,4 +22,5 @@ public class ProductDto {
     private String physicalReceiptLocation;
     private VendorDto vendor;
     private UserDto user;
+    private WarrantyStatus warrantyStatus;
 }

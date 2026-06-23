@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.context.annotation.Lazy;
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
@@ -14,32 +14,35 @@ import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
-import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.repository.product.ProductRepository;
 import bg.softuni.warranty_tracker.service.vendor.VendorService;
 import lombok.extern.slf4j.Slf4j;
+import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 
 @Slf4j
 @Service
-@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserMapper userMapper;
     private final ProductMapper productMapper;
     private final VendorService vendorService;
+    private final ClaimService claimService;
 
     public ProductService(ProductRepository productRepository, UserMapper userMapper, ProductMapper productMapper,
-            VendorService vendorService) {
+            VendorService vendorService, @Lazy ClaimService claimService) {
         this.productRepository = productRepository;
         this.userMapper = userMapper;
         this.productMapper = productMapper;
         this.vendorService = vendorService;
+        this.claimService = claimService;
     }
 
     public List<ProductDto> getAllProducts(UserDto userDto) {
@@ -48,27 +51,38 @@ public class ProductService {
         return productMapper.toDtos(productEntities);
     }
 
-    public ProductDto registerProduct(ProductFormRequest productFormRequest, UserDto userDto) {
+    @Transactional
+    public ProductDto registerProduct(RegisterProductRequest registerProductRequest, UserDto userDto) {
 
-        if (productFormRequest == null || userDto == null) {
+        if (registerProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
-        VendorDto vendorDto = resolveVendor(productFormRequest, userDto);
-
-        Product product = productMapper.toProduct(productFormRequest, vendorDto, userDto);
+        if (productRepository.findBySerialNumberAndUserId(registerProductRequest.getSerialNumber(), userDto.getId()).isPresent()) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
+        VendorDto vendorDto = resolveVendor(registerProductRequest, userDto);
+        Product product = productMapper.toProduct(registerProductRequest, vendorDto, userDto);
         productRepository.save(product);
         log.info(LogMessages.PRODUCT_REGISTERED_SUCCESSFULLY);
         return productMapper.toDto(product);
 
     }
 
+    @Transactional
     public void updateProduct(EditProductRequest editProductRequest, UserDto userDto) {
         if (editProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
         }
         Product existingProduct = productRepository.findById(editProductRequest.getId())
                 .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
+
+        if (productRepository
+                .findBySerialNumberAndUserIdAndIdNot(editProductRequest.getSerialNumber(), editProductRequest.getId(), userDto.getId())
+                .isPresent()) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
+
         verifyProductUser(existingProduct, userDto.getId());
 
         VendorDto vendorDto = resolveVendor(editProductRequest, userDto);
@@ -77,14 +91,21 @@ public class ProductService {
         log.info(LogMessages.PRODUCT_UPDATED_SUCCESSFULLY, product.getId());
     }
 
+    @Transactional
     public void deleteProductById(String id, UserDto userDto) {
 
         Product product = productRepository.findById(UUID.fromString(id)).orElse(null);
 
         verifyProductUser(product, userDto.getId());
+        List<ClaimDto> claims = claimService.getClaims(product.getId().toString(), userDto);
+        if (claimService.hasActiveClaim(claims)) {
+            throw new RuntimeException(ExceptionMessages.PRODUCT_HAS_ACTIVE_CLAIM);
+        } else if (claims.size() > 0) {
+            claims.forEach(claim -> claimService.deleteClaimById(claim.getId().toString(), userDto));
+        }
 
         productRepository.delete(product);
-        log.info("Product deleted: " + product.getId());
+        log.info(LogMessages.PRODUCT_DELETED_SUCCESSFULLY, product.getId());
     }
 
     public ProductDto getById(String productId, UserDto userDto) {
@@ -93,17 +114,17 @@ public class ProductService {
         return productMapper.toDto(product);
     }
 
-    private VendorDto resolveVendor(ProductFormRequest productFormRequest, UserDto userDto) {
+    private VendorDto resolveVendor(RegisterProductRequest registerProductRequest, UserDto userDto) {
         VendorDto vendorDto;
-        if (productFormRequest == null || userDto == null) {
+        if (registerProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
         }
-        if (productFormRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
-            vendorDto = vendorService.createVendor(productFormRequest.getRegisterVendorRequest(), userDto);
+        if (registerProductRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
+            vendorDto = vendorService.createVendor(registerProductRequest.getRegisterVendorRequest(), userDto);
         } else {
             UUID vendorUuid;
             try {
-                vendorUuid = UUID.fromString(productFormRequest.getVendorId());
+                vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
             } catch (Exception e) {
                 throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
             }
@@ -133,7 +154,7 @@ public class ProductService {
     }
 
     // helpers
-    //todo refactor to use UUID
+    // todo refactor to use UUID
     public void verifyProductUser(Product product, UUID userId) {
         if (product == null) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);

@@ -7,16 +7,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import bg.softuni.warranty_tracker.constant.Constants;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
-    private static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/", "/users/login", "/users/register", // todo constants for those?
-            "/error");
+    private static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of(Constants.UNAUTHENTICATED_ENDPOINTS);
 
     private final UserService userService;
 
@@ -36,13 +38,15 @@ public class SessionInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect("/users/login");
+            return false;
         }
 
-        UUID userId = UUID.fromString(String.valueOf(session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE)));
-        if (userId == null) {
+        
+        if (session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE) == null) {
             invalidateSession(session, response);
             return false;
         }
+        UUID userId = (UUID) session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE);
 
         UserDto userDto = userService.getById(userId);
 
@@ -55,6 +59,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     private void invalidateSession(HttpSession session, HttpServletResponse response) throws Exception {
+        log.info(LogMessages.SESSION_INVALID_REDIRECT, session.getId());
         session.invalidate();
         response.sendRedirect("/users/login");
     }

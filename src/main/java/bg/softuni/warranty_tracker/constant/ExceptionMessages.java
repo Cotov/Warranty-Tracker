@@ -2,6 +2,7 @@ package bg.softuni.warranty_tracker.constant;
 
 public class ExceptionMessages {
     public static final String USER_NOT_FOUND = "User was not found by UUID";
+    public static final String PRODUCT_ALREADY_EXISTS = "Product with this serial number already exists";
     public static final String REGISTER_PRODUCT_FAILED = "Register product failed - request or user dto null";
     public static final String UPDATE_PRODUCT_FAILED = "Update product failed - request or user dto null";
     public static final String VENDOR_NOT_FOUND = "Vendor not found by UUID";
@@ -18,4 +19,5 @@ public class ExceptionMessages {
     public static final String CLAIM_NOT_FOUND = "Claim not found";
     public static final String UPDATE_CLAIM_FAILED = "Update claim failed - request or user dto null";
     public static final String INVALID_STATUS_TRANSITION = "Invalid status transition";
+    public static final String PRODUCT_HAS_ACTIVE_CLAIM = "Product has active or pending claim";
 }

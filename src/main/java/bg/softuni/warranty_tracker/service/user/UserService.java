@@ -21,7 +21,6 @@ import bg.softuni.warranty_tracker.constant.LogMessages;
 
 @Slf4j
 @Service
-@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -34,10 +33,15 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public void register(UserRegisterRequest userRegisterRequest) {
+    @Transactional
+    public UUID register(UserRegisterRequest userRegisterRequest) {
 
         userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {
             throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
+        });
+
+        userRepository.findByEmail(userRegisterRequest.getEmail()).ifPresent(user -> {
+            throw new RuntimeException(ErrorMessages.EMAIL_ALREADY_EXISTS);
         });
 
         String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword());
@@ -45,6 +49,7 @@ public class UserService {
 
         userRepository.save(user);
         log.info(LogMessages.USER_REGISTERED_SUCCESSFULLY, user.getUsername());
+        return user.getId();
     }
 
     public UserDto login(UserLoginRequest userLoginRequest) {
@@ -60,6 +65,7 @@ public class UserService {
             throw new RuntimeException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
         }
 
+        log.info(LogMessages.USER_LOGGED_IN_SUCCESSFULLY, user.getUsername());
         return userMapper.toUserDto(user);
     }
 

@@ -1,8 +1,3 @@
-:root {
-    --success-color: #34d399;
-    --success-bg: rgba(52, 211, 153, 0.08);
-}
-
 body.dashboard-page {
     align-items: stretch;
     justify-content: flex-start;
@@ -28,54 +23,11 @@ body.dashboard-page {
     margin-bottom: 0;
 }
 
-.page-header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.page-header h1::before {
-    content: '> ';
-    color: var(--primary);
-}
-
-.page-header p {
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
 .product-count {
     font-size: 12px;
     color: var(--text-muted);
     margin-top: 6px;
     letter-spacing: 0.5px;
-}
-
-.btn-primary {
-    flex-shrink: 0;
-    padding: 12px 20px;
-    background-color: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-.btn-primary:hover {
-    background-color: var(--primary);
-    color: var(--bg-color);
-    box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
 }
 
 .alert-placeholder {
@@ -118,25 +70,6 @@ body.dashboard-page {
     letter-spacing: 1px;
     color: var(--accent);
     opacity: 0.7;
-}
-
-.table-wrapper {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    position: relative;
-}
-
-.table-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
 }
 
 .product-table {
@@ -207,17 +140,6 @@ body.dashboard-page {
     color: var(--text-main);
 }
 
-.days-remaining {
-    display: block;
-    font-size: 11px;
-    margin-top: 3px;
-    letter-spacing: 0.3px;
-}
-
-.days-remaining.active { color: var(--success-color); }
-.days-remaining.expiring { color: var(--accent); }
-.days-remaining.expired { color: var(--text-muted); }
-
 .status-badge {
     display: inline-block;
     padding: 4px 10px;
@@ -228,19 +150,19 @@ body.dashboard-page {
     letter-spacing: 1px;
 }
 
-.status-badge.active {
+.status-badge.ACTIVE {
     color: var(--success-color);
     background-color: var(--success-bg);
     border: 1px solid rgba(52, 211, 153, 0.25);
 }
 
-.status-badge.expiring {
+.status-badge.EXPIRING_SOON {
     color: var(--accent);
     background-color: var(--error-bg);
     border: 1px solid rgba(244, 63, 94, 0.25);
 }
 
-.status-badge.expired {
+.status-badge.EXPIRED {
     color: var(--text-muted);
     background-color: rgba(148, 163, 184, 0.08);
     border: 1px solid rgba(148, 163, 184, 0.2);
@@ -280,21 +202,6 @@ button.action-link {
     color: var(--border-color);
     margin: 0 8px;
     font-size: 11px;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-}
-
-.empty-state p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-    letter-spacing: 0.5px;
 }
 
 @media (max-width: 768px) {

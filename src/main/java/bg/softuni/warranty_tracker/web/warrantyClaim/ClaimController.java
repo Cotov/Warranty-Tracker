@@ -2,7 +2,6 @@ package bg.softuni.warranty_tracker.web.warrantyClaim;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,7 +21,6 @@ import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import bg.softuni.warranty_tracker.security.SessionUtils;
 import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
-import bg.softuni.warranty_tracker.service.user.UserService;
 import bg.softuni.warranty_tracker.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -32,12 +30,10 @@ import jakarta.validation.Valid;
 public class ClaimController {
 
     private final ClaimService claimService;
-    private final UserService userService;
     private final ProductService productService;
 
-    public ClaimController(ClaimService claimService, UserService userService, ProductService productService) {
+    public ClaimController(ClaimService claimService, ProductService productService) {
         this.claimService = claimService;
-        this.userService = userService;
         this.productService = productService;
     }
 
@@ -46,7 +42,7 @@ public class ClaimController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/claims");
 
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        UserDto userDto = SessionUtils.getUserDto(session);
         List<ClaimDto> claims = claimService.getClaims(productId, userDto);
         modelAndView.addObject("claims", claims);
 
@@ -64,7 +60,7 @@ public class ClaimController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/add-claim");
 
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        UserDto userDto = SessionUtils.getUserDto(session);
         ProductDto product = productService.getById(productId, userDto);
         AddClaimRequest addClaimRequest = AddClaimRequest.builder()
                 .product(product)
@@ -82,7 +78,7 @@ public class ClaimController {
     public ModelAndView addClaim(@PathVariable String productId, @Valid @ModelAttribute AddClaimRequest addClaimRequest,
             BindingResult bindingResult, HttpSession session) {
 
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        UserDto userDto = SessionUtils.getUserDto(session);
         ProductDto product = productService.getById(productId, userDto);
         addClaimRequest.setProduct(product);
         ModelAndView modelAndView = new ModelAndView();
@@ -104,7 +100,7 @@ public class ClaimController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/edit-claim");
 
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        UserDto userDto = SessionUtils.getUserDto(session);
         ProductDto product = productService.getById(productId, userDto);
         modelAndView.addObject("product", product);
 
@@ -127,7 +123,7 @@ public class ClaimController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/edit-claim");
-        UserDto userDto = userService.getById(SessionUtils.getUserId(session));
+        UserDto userDto = SessionUtils.getUserDto(session);
 
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("editClaimRequest", editClaimRequest);
@@ -147,5 +143,4 @@ public class ClaimController {
         modelAndView.setViewName("redirect:/products/{productId}/claims");
         return modelAndView;
     }
-
 }

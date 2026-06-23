@@ -1,8 +1,3 @@
-:root {
-    --success-color: #34d399;
-    --success-bg: rgba(52, 211, 153, 0.08);
-}
-
 body.claim-form-page {
     justify-content: flex-start;
 }
@@ -29,50 +24,8 @@ body.claim-form-page {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
 }
 
-/* ── Back link ── */
-.back-link {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    text-decoration: none;
-    margin-bottom: 20px;
-    transition: color 0.2s ease;
-}
-
-.back-link::before {
-    content: '← ';
-}
-
-.back-link:hover {
-    color: var(--primary);
-}
-
-/* ── Page header ── */
 .page-header {
     margin-bottom: 28px;
-}
-
-.page-header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.page-header h1::before {
-    content: '> ';
-    color: var(--primary);
-}
-
-.page-header p {
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
 }
 
 /* ── Product context ── */
@@ -161,7 +114,7 @@ body.claim-form-page {
     color: var(--accent);
 }
 
-/* ── Form elements (add claim) ── */
+/* ── Form elements ── */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -230,47 +183,8 @@ body.claim-form-page {
     letter-spacing: 0.3px;
 }
 
-.error-message {
-    color: var(--error-color);
-    font-size: 11px;
-    margin-top: 6px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    display: none;
-}
-
-.error-message.is-visible {
-    display: block;
-}
-
-.btn-submit {
-    width: 100%;
-    padding: 14px;
-    background-color: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 4px;
-    font-family: inherit;
-}
-
-.btn-submit:hover {
-    background-color: var(--primary);
-    color: var(--bg-color);
-    box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
-}
-
-.btn-submit:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
+/* ── Submit / mutate buttons ── */
+.btn-submit,
 .btn-mutate {
     width: 100%;
     padding: 14px;
@@ -288,10 +202,16 @@ body.claim-form-page {
     font-family: inherit;
 }
 
+.btn-submit:hover,
 .btn-mutate:hover {
     background-color: var(--primary);
     color: var(--bg-color);
     box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+}
+
+.btn-submit:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* ── Claim details (edit claim) ── */
@@ -373,127 +293,9 @@ body.claim-form-page {
     color: var(--text-main);
 }
 
-.claim-id {
-    font-size: 11px;
-    color: var(--text-muted);
-}
-
-.claim-description-block label {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-
-.claim-description-block p {
-    font-size: 13px;
-    color: var(--text-main);
-    line-height: 1.6;
-    letter-spacing: 0.3px;
-}
-
-/* ── Section divider (edit claim) ── */
-.section-divider {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: 0 0 24px;
-}
-
-.section-title {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-}
-
-/* ── Action buttons (edit claim) ── */
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.btn-action {
-    width: 100%;
-    padding: 14px 20px;
-    background-color: transparent;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    border: 1px solid;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.btn-action .btn-desc {
-    font-size: 11px;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0.3px;
-    opacity: 0.7;
-}
-
-.btn-action.mark-active {
-    color: var(--primary);
-    border-color: rgba(56, 189, 248, 0.4);
-}
-
-.btn-action.mark-active:hover {
-    background-color: rgba(56, 189, 248, 0.08);
-    border-color: var(--primary);
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.15);
-}
-
-.btn-action.mark-resolved {
-    color: var(--success-color);
-    border-color: rgba(52, 211, 153, 0.4);
-}
-
-.btn-action.mark-resolved:hover {
-    background-color: rgba(52, 211, 153, 0.06);
-    border-color: var(--success-color);
-    box-shadow: 0 0 14px rgba(52, 211, 153, 0.15);
-}
-
-.btn-action.mark-rejected {
-    color: var(--text-muted);
-    border-color: rgba(148, 163, 184, 0.2);
-}
-
-.btn-action.mark-rejected:hover {
-    color: var(--accent);
-    border-color: rgba(244, 63, 94, 0.4);
-    background-color: rgba(244, 63, 94, 0.04);
-}
-
 /* ── Footer ── */
 .footer-text {
-    text-align: center;
     margin-top: 24px;
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
-.footer-text a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.footer-text a:hover {
-    text-decoration: underline;
 }
 
 @media (max-width: 640px) {

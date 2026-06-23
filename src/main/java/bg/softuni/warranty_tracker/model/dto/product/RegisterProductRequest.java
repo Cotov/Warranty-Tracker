@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @ValidateNewVendor
 @ValidateProductDates
 @Builder
-public class ProductFormRequest {
+public class RegisterProductRequest {
 
     @NotBlank(message = ValidationMessages.DESCRIPTION_REQUIRED)
     private String productDescription;

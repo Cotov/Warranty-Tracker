@@ -3,10 +3,9 @@ spring.application.name=warranty-tracker
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
 spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/warranty_tracker?createDatabaseIfNotExist=true
-# net start MySql80
-spring.datasource.username=root
-spring.datasource.password=0000
+spring.datasource.url=jdbc:mysql://localhost:8080...
+spring.datasource.username=
+spring.datasource.password=
 logging.level.org.hibernate.persister.entity=ERROR
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true

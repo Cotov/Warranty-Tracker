@@ -33,7 +33,6 @@ public class Vendor {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotEmpty(message = ValidationMessages.NAME_REQUIRED)
     @Column(nullable = false)
     private String name;
 

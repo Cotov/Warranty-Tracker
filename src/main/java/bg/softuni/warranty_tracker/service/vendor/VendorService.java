@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@Transactional
 public class VendorService {
 
     private final VendorRepository vendorRepository;
@@ -63,6 +62,7 @@ public class VendorService {
         return vendorMapper.toVendorDto(vendor);
     }
 
+    @Transactional
     public VendorDto createVendor(RegisterVendorRequest registerVendorRequest, UserDto userDto) {
         if (registerVendorRequest == null) {
             throw new RuntimeException(ExceptionMessages.VENDOR_CREATION_FAILED);

@@ -3,8 +3,6 @@ package bg.softuni.warranty_tracker.service.warrantyClaim;
 import bg.softuni.warranty_tracker.service.product.ProductService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +18,12 @@ import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
-import bg.softuni.warranty_tracker.model.entity.product.Product;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.Claim;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
-import bg.softuni.warranty_tracker.repository.product.ProductRepository;
 import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
-import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 
 @Slf4j
@@ -36,20 +32,17 @@ public class ClaimService {
 
     private final ProductService productService;
     private final ClaimRepository claimRepository;
-    private final ProductMapper productMapper;
     private final ClaimMapper claimMapper;
 
-    public ClaimService(ClaimRepository claimRepository, ProductMapper productMapper,
-            ClaimMapper claimMapper, ProductService productService) {
+    public ClaimService(ClaimRepository claimRepository, ClaimMapper claimMapper,
+            ProductService productService) {
         this.claimRepository = claimRepository;
-        this.productMapper = productMapper;
         this.claimMapper = claimMapper;
         this.productService = productService;
     }
 
     public List<ClaimDto> getClaims(String productId, UserDto userDto) {
-        ProductDto productDto = productService.getById(productId, userDto);
-        productService.verifyProductUser(productDto.getId(), userDto.getId());
+        productService.verifyProductUser(UUID.fromString(productId), userDto.getId());
         List<Claim> claims = claimRepository.findByProductId(UUID.fromString(productId));
         List<ClaimDto> claimDtos = claims.stream().map(claimMapper::toClaimDto).collect(Collectors.toList());
         return claimDtos;
@@ -79,7 +72,7 @@ public class ClaimService {
         addClaimRequest.setProduct(productDto);
         Claim claim = claimMapper.toClaim(addClaimRequest);
         claimRepository.save(claim);
-        log.info("Claim added successfully: {}", claim.getId());
+        log.info(LogMessages.CLAIM_ADDED_SUCCESSFULLY, claim.getId());
     }
 
     public boolean hasActiveClaim(List<ClaimDto> claimDtos) {
@@ -118,7 +111,7 @@ public class ClaimService {
             claim.setDateFiled(LocalDate.now());
         }
         claimRepository.save(claim);
-        log.info("Claim updated successfully: {}", claim.getId());
+        log.info(LogMessages.CLAIM_UPDATED_SUCCESSFULLY, claim.getId());
     }
 
     private void verifyClaimUser(Claim claim, UUID userId) {
@@ -127,6 +120,14 @@ public class ClaimService {
             throw new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND);
         }
         productService.verifyProductUser(claim.getProduct(), userId);
+    }
+
+    public void deleteClaimById(String claimId, UserDto userDto) {
+        Claim claim = claimRepository.findById(UUID.fromString(claimId))
+                .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
+        verifyClaimUser(claim, userDto.getId());
+        claimRepository.delete(claim);
+        log.info(LogMessages.CLAIM_DELETED_SUCCESSFULLY, claim.getId());
     }
 
     private static final Map<ClaimStatus, Set<ClaimStatus>> INVALID_STATUS_TRANSITIONS = Map.of(
