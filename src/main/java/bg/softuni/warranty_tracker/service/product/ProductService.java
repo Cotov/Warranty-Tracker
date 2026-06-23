@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.annotation.Lazy;
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.LogMessages;
+import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
+import bg.softuni.warranty_tracker.customExceptions.DataMapException;
+import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
+import bg.softuni.warranty_tracker.customExceptions.InvalidSessionException;
+import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
@@ -55,11 +60,11 @@ public class ProductService {
     public ProductDto registerProduct(RegisterProductRequest registerProductRequest, UserDto userDto) {
 
         if (registerProductRequest == null || userDto == null) {
-            throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
+            throw new DataMapException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
         if (productRepository.findBySerialNumberAndUserId(registerProductRequest.getSerialNumber(), userDto.getId()).isPresent()) {
-            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+            throw new DuplicateEntityException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }
         VendorDto vendorDto = resolveVendor(registerProductRequest, userDto);
         Product product = productMapper.toProduct(registerProductRequest, vendorDto, userDto);
@@ -72,15 +77,15 @@ public class ProductService {
     @Transactional
     public void updateProduct(EditProductRequest editProductRequest, UserDto userDto) {
         if (editProductRequest == null || userDto == null) {
-            throw new RuntimeException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
+            throw new DataMapException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
         }
         Product existingProduct = productRepository.findById(editProductRequest.getId())
-                .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.PRODUCT_NOT_FOUND));
 
         if (productRepository
                 .findBySerialNumberAndUserIdAndIdNot(editProductRequest.getSerialNumber(), editProductRequest.getId(), userDto.getId())
                 .isPresent()) {
-            throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+            throw new DuplicateEntityException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }
 
         verifyProductUser(existingProduct, userDto.getId());
@@ -99,7 +104,7 @@ public class ProductService {
         verifyProductUser(product, userDto.getId());
         List<ClaimDto> claims = claimService.getClaims(product.getId().toString(), userDto);
         if (claimService.hasActiveClaim(claims)) {
-            throw new RuntimeException(ExceptionMessages.PRODUCT_HAS_ACTIVE_CLAIM);
+            throw new ActiveClaimException(ExceptionMessages.PRODUCT_HAS_ACTIVE_CLAIM);
         } else if (claims.size() > 0) {
             claims.forEach(claim -> claimService.deleteClaimById(claim.getId().toString(), userDto));
         }
@@ -117,7 +122,7 @@ public class ProductService {
     private VendorDto resolveVendor(RegisterProductRequest registerProductRequest, UserDto userDto) {
         VendorDto vendorDto;
         if (registerProductRequest == null || userDto == null) {
-            throw new RuntimeException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
+            throw new ObjectNotFoundException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
         }
         if (registerProductRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
             vendorDto = vendorService.createVendor(registerProductRequest.getRegisterVendorRequest(), userDto);
@@ -126,7 +131,7 @@ public class ProductService {
             try {
                 vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
             } catch (Exception e) {
-                throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
+                throw new ObjectNotFoundException(ExceptionMessages.VENDOR_NOT_FOUND);
             }
             vendorDto = vendorService.getVendorByIdAndUserId(vendorUuid, userDto);
         }
@@ -137,7 +142,7 @@ public class ProductService {
         VendorDto vendorDto;
 
         if (editProductRequest.getVendorId() == null || userDto == null) {
-            throw new RuntimeException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
+            throw new ObjectNotFoundException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
         }
         if (editProductRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
             vendorDto = vendorService.createVendor(editProductRequest.getRegisterVendorRequest(), userDto);
@@ -146,7 +151,7 @@ public class ProductService {
             try {
                 vendorUuid = UUID.fromString(editProductRequest.getVendorId());
             } catch (Exception e) {
-                throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
+                throw new ObjectNotFoundException(ExceptionMessages.VENDOR_NOT_FOUND);
             }
             vendorDto = vendorService.getVendorByIdAndUserId(vendorUuid, userDto);
         }
@@ -157,15 +162,15 @@ public class ProductService {
     // todo refactor to use UUID
     public void verifyProductUser(Product product, UUID userId) {
         if (product == null) {
-            throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);
+            throw new ObjectNotFoundException(ExceptionMessages.PRODUCT_NOT_FOUND);
         } else if (!userId.equals(product.getUser().getId())) {
-            throw new RuntimeException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
+            throw new InvalidSessionException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
         }
     }
 
     public void verifyProductUser(UUID productId, UUID userId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.PRODUCT_NOT_FOUND));
         verifyProductUser(product, userId);
     }
 
@@ -179,7 +184,7 @@ public class ProductService {
     public EditProductRequest getEditProductRequest(ProductDto productDto) {
         EditProductRequest editProductRequest = productMapper.toEditProductRequest(productDto);
         if (editProductRequest == null) {
-            throw new RuntimeException(ExceptionMessages.FAILED_TO_MAP_PRODUCT_TO_EDIT_REQUEST);
+            throw new DataMapException(ExceptionMessages.FAILED_TO_MAP_PRODUCT_TO_EDIT_REQUEST);
         }
         editProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
         return editProductRequest;

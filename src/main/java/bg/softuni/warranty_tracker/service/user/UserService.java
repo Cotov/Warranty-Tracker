@@ -18,6 +18,9 @@ import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.entity.user.User;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.LogMessages;
+import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
+import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.UserException;
 
 @Slf4j
 @Service
@@ -37,11 +40,11 @@ public class UserService {
     public UUID register(UserRegisterRequest userRegisterRequest) {
 
         userRepository.findByUsername(userRegisterRequest.getUsername()).ifPresent(user -> {
-            throw new RuntimeException(ErrorMessages.USERNAME_ALREADY_EXISTS);
+            throw new DuplicateEntityException(ErrorMessages.USERNAME_ALREADY_EXISTS);
         });
 
         userRepository.findByEmail(userRegisterRequest.getEmail()).ifPresent(user -> {
-            throw new RuntimeException(ErrorMessages.EMAIL_ALREADY_EXISTS);
+            throw new DuplicateEntityException(ErrorMessages.EMAIL_ALREADY_EXISTS);
         });
 
         String encodedPassword = passwordEncoder.encode(userRegisterRequest.getPassword());
@@ -57,12 +60,12 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
 
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
+            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
         }
 
         User user = optionalUser.get();
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
+            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
         }
 
         log.info(LogMessages.USER_LOGGED_IN_SUCCESSFULLY, user.getUsername());
@@ -72,7 +75,7 @@ public class UserService {
     public UserDto getById(UUID uuid) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isEmpty()) {
-            throw new RuntimeException(ExceptionMessages.USER_NOT_FOUND);
+            throw new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND);
         }
         return userMapper.toUserDto(user.get());
     }
