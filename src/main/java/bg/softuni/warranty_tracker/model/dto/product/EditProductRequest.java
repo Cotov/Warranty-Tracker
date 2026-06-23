@@ -4,15 +4,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
-import bg.softuni.warranty_tracker.validation.ValidateNewVendor;
-import bg.softuni.warranty_tracker.validation.ValidateProductDates;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ValidateNewVendor
-@ValidateProductDates
 public class EditProductRequest extends RegisterProductRequest {
 
     private String vendorName;

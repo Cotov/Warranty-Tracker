@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.context.annotation.Lazy;
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
@@ -38,7 +37,7 @@ public class ProductService {
     private final ClaimService claimService;
 
     public ProductService(ProductRepository productRepository, UserMapper userMapper, ProductMapper productMapper,
-            VendorService vendorService, @org.springframework.context.annotation.Lazy ClaimService claimService) {
+            VendorService vendorService, @Lazy ClaimService claimService) {
         this.productRepository = productRepository;
         this.userMapper = userMapper;
         this.productMapper = productMapper;
@@ -59,7 +58,7 @@ public class ProductService {
             throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
-        if (productRepository.findBySerialNumber(registerProductRequest.getSerialNumber()).isPresent()) {
+        if (productRepository.findBySerialNumberAndUserId(registerProductRequest.getSerialNumber(), userDto.getId()).isPresent()) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }
         VendorDto vendorDto = resolveVendor(registerProductRequest, userDto);
@@ -79,7 +78,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND));
 
         if (productRepository
-                .findBySerialNumberAndIdNot(editProductRequest.getSerialNumber(), editProductRequest.getId())
+                .findBySerialNumberAndUserIdAndIdNot(editProductRequest.getSerialNumber(), editProductRequest.getId(), userDto.getId())
                 .isPresent()) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }

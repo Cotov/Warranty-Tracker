@@ -41,8 +41,7 @@ public class ClaimService {
     }
 
     public List<ClaimDto> getClaims(String productId, UserDto userDto) {
-        ProductDto productDto = productService.getById(productId, userDto);
-        productService.verifyProductUser(productDto.getId(), userDto.getId());
+        productService.verifyProductUser(UUID.fromString(productId), userDto.getId());
         List<Claim> claims = claimRepository.findByProductId(UUID.fromString(productId));
         List<ClaimDto> claimDtos = claims.stream().map(claimMapper::toClaimDto).collect(Collectors.toList());
         return claimDtos;

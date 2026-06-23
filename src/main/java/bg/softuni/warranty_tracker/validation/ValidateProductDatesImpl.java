@@ -17,8 +17,8 @@ public class ValidateProductDatesImpl implements ConstraintValidator<ValidatePro
 
         if (request.getWarrantyEnd().isBefore(request.getWarrantyStart())) {
             isValid = false;
-            ValidationUtils.addFieldError(context, "warrantyStart",
-                    ValidationMessages.WARRANTY_START_CANNOT_BE_BEFORE_START);
+            ValidationUtils.addFieldError(context, "warrantyEnd",
+                    ValidationMessages.WARRANTY_START_CANNOT_BE_BEFORE_END);
         }
 
         return isValid;

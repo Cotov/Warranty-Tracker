@@ -14,6 +14,6 @@ import bg.softuni.warranty_tracker.model.entity.user.User;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findByUser(User user);
-    Optional<Product> findBySerialNumber(String serialNumber);
-    Optional<Product> findBySerialNumberAndIdNot(String serialNumber, UUID id);
+    Optional<Product> findBySerialNumberAndUserId(String serialNumber, UUID userId);
+    Optional<Product> findBySerialNumberAndUserIdAndIdNot(String serialNumber, UUID productId, UUID userId);
 }
