@@ -9,7 +9,7 @@
 
     <div class="claim-form-container">
 
-        <a href="#" class="back-link">Back to Claims</a>
+        <a th:href="@{/products/{productId}/claims(productId=${addClaimRequest.product.id})}" class="back-link">Back to Claims</a>
 
         <div class="page-header">
             <h1>SYS.NEW_CLAIM()</h1>
