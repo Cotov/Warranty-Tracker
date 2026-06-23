@@ -105,7 +105,7 @@ public class ProductService {
         }
 
         productRepository.delete(product);
-        log.info("Product deleted: " + product.getId());
+        log.info(LogMessages.PRODUCT_DELETED_SUCCESSFULLY, product.getId());
     }
 
     public ProductDto getById(String productId, UserDto userDto) {

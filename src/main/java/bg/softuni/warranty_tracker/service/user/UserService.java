@@ -65,6 +65,7 @@ public class UserService {
             throw new RuntimeException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
         }
 
+        log.info(LogMessages.USER_LOGGED_IN_SUCCESSFULLY, user.getUsername());
         return userMapper.toUserDto(user);
     }
 

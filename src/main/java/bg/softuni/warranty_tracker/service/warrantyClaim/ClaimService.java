@@ -23,6 +23,7 @@ import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 
 @Slf4j
@@ -71,7 +72,7 @@ public class ClaimService {
         addClaimRequest.setProduct(productDto);
         Claim claim = claimMapper.toClaim(addClaimRequest);
         claimRepository.save(claim);
-        log.info("Claim added successfully: {}", claim.getId());
+        log.info(LogMessages.CLAIM_ADDED_SUCCESSFULLY, claim.getId());
     }
 
     public boolean hasActiveClaim(List<ClaimDto> claimDtos) {
@@ -110,7 +111,7 @@ public class ClaimService {
             claim.setDateFiled(LocalDate.now());
         }
         claimRepository.save(claim);
-        log.info("Claim updated successfully: {}", claim.getId());
+        log.info(LogMessages.CLAIM_UPDATED_SUCCESSFULLY, claim.getId());
     }
 
     private void verifyClaimUser(Claim claim, UUID userId) {
@@ -126,7 +127,7 @@ public class ClaimService {
                 .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
         verifyClaimUser(claim, userDto.getId());
         claimRepository.delete(claim);
-        log.info("Claim deleted successfully: {}", claim.getId());
+        log.info(LogMessages.CLAIM_DELETED_SUCCESSFULLY, claim.getId());
     }
 
     private static final Map<ClaimStatus, Set<ClaimStatus>> INVALID_STATUS_TRANSITIONS = Map.of(

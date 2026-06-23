@@ -7,12 +7,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import bg.softuni.warranty_tracker.constant.Constants;
+import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
     private static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of(Constants.UNAUTHENTICATED_ENDPOINTS);
@@ -56,6 +59,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
 
     private void invalidateSession(HttpSession session, HttpServletResponse response) throws Exception {
+        log.info(LogMessages.SESSION_INVALID_REDIRECT, session.getId());
         session.invalidate();
         response.sendRedirect("/users/login");
     }
