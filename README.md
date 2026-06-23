@@ -151,6 +151,7 @@ _Spring Fundamentals — Regular Exam, June 2026_
 | Guests restricted to register / login | `SessionInterceptor` redirects unauthenticated requests to `/users/login` |
 | Server-side validation on every form | `@Valid` on all controller methods; DTOs use `@NotBlank`, `@Size`, `@Email`, `@NotNull`; 3 custom validators |
 | Validation error messages per field | Thymeleaf `th:errors` blocks on all form templates |
+| Custom exceptions + global handler | Named exception classes in `customExceptions/`; `GlobalExceptionHandler` (`@ControllerAdvice`) catches and maps them |
 | README with tech stack, features, functionalities | This file |
 | At least 10 commits across 3+ days | 39 commits; active across 9 distinct days (May 30 – Jun 23) |
 
@@ -159,5 +160,4 @@ _Spring Fundamentals — Regular Exam, June 2026_
 | Requirement | Gap |
 |---|---|
 | **Role-based access control** | No user roles exist. All authenticated users are equivalent — no `UserRole` enum, no admin / user distinction. The requirement explicitly demands role checks (e.g. only the resource owner or an admin can perform certain actions). |
-| **Custom exceptions** | Services throw bare `new RuntimeException(message)`. The requirement says to create and throw custom exception classes for business rule violations. No `@ControllerAdvice` global handler either. |
 | **Conventional Commits format** | Zero commits follow the required `<type>: description` format (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`). All 39 commit messages are plain prose. |

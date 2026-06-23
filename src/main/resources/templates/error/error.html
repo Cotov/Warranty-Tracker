@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Something went wrong', pageStyle='')}">
+  <title>Error</title>
+</head>
+<body>
+  <div th:replace="~{fragments/header :: header('error' )}"></div>
+  <main>
+    <h1>Oops! Something went wrong</h1>
+    <p th:text="${statusCode}">Error code</p>
+    <p th:text="${errorMessage}">Error message</p>
+    <a href="/dashboard">Go back to Dashboard</a>
+  </main>
+</body>
+</html>

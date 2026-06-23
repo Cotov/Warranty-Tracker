@@ -24,6 +24,10 @@ import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.constant.LogMessages;
+import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
+import bg.softuni.warranty_tracker.customExceptions.DataMapException;
+import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionException;
+import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 
 @Slf4j
@@ -51,7 +55,7 @@ public class ClaimService {
     @Transactional
     public void addClaim(AddClaimRequest addClaimRequest, UserDto userDto) {
         if (addClaimRequest == null || addClaimRequest.getProduct() == null) {
-            throw new RuntimeException(ExceptionMessages.ADD_CLAIM_FAILED);
+            throw new DataMapException(ExceptionMessages.ADD_CLAIM_FAILED);
         }
 
         UUID productId = addClaimRequest.getProduct().getId();
@@ -60,14 +64,10 @@ public class ClaimService {
 
         boolean activeClaimExists = hasActiveClaim(claimDtos);
         if (activeClaimExists) {
-            throw new RuntimeException(ExceptionMessages.ACTIVE_CLAIM_EXISTS);
+            throw new ActiveClaimException(ExceptionMessages.ACTIVE_CLAIM_EXISTS);
         }
 
-        // Product product = productRepository.findById(productId).orElse(null);
         ProductDto productDto = productService.getById(productId.toString(), userDto);
-        if (productDto == null) {
-            throw new RuntimeException(ExceptionMessages.PRODUCT_NOT_FOUND);
-        }
 
         addClaimRequest.setProduct(productDto);
         Claim claim = claimMapper.toClaim(addClaimRequest);
@@ -82,7 +82,7 @@ public class ClaimService {
 
     public ClaimDto getById(String claimId, UserDto userDto) {
         Claim claim = claimRepository.findById(UUID.fromString(claimId))
-                .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND));
         verifyClaimUser(claim, userDto.getId());
         return claimMapper.toClaimDto(claim);
     }
@@ -94,15 +94,15 @@ public class ClaimService {
     @Transactional
     public void updateClaim(EditClaimRequest editClaimRequest, UserDto userDto) {
         if (editClaimRequest == null || userDto == null) {
-            throw new RuntimeException(ExceptionMessages.UPDATE_CLAIM_FAILED);
+            throw new DataMapException(ExceptionMessages.UPDATE_CLAIM_FAILED);
         }
         Claim claim = claimRepository.findById(editClaimRequest.getId())
-                .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND));
         verifyClaimUser(claim, userDto.getId());
 
         ClaimStatus currentStatus = claim.getStatus();
         if (INVALID_STATUS_TRANSITIONS.get(currentStatus).contains(editClaimRequest.getStatus())) {
-            throw new RuntimeException(ExceptionMessages.INVALID_STATUS_TRANSITION);
+            throw new InvalidStatusTransitionException(ExceptionMessages.INVALID_STATUS_TRANSITION);
         }
 
         claim.setStatus(editClaimRequest.getStatus());
@@ -117,14 +117,14 @@ public class ClaimService {
     private void verifyClaimUser(Claim claim, UUID userId) {
 
         if (claim == null || userId == null) {
-            throw new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND);
+            throw new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND);
         }
         productService.verifyProductUser(claim.getProduct(), userId);
     }
 
     public void deleteClaimById(String claimId, UserDto userDto) {
         Claim claim = claimRepository.findById(UUID.fromString(claimId))
-                .orElseThrow(() -> new RuntimeException(ExceptionMessages.CLAIM_NOT_FOUND));
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND));
         verifyClaimUser(claim, userDto.getId());
         claimRepository.delete(claim);
         log.info(LogMessages.CLAIM_DELETED_SUCCESSFULLY, claim.getId());

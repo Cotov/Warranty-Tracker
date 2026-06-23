@@ -7,7 +7,6 @@ public class ValidationMessages {
     // User
     public static final String USERNAME_REQUIRED = "Username is required";
     public static final String PASSWORD_REQUIRED = "Password is required";
-    //todo constraint numbers in constants
     public static final String USERNAME_LENGTH = "Username must be between 6 and 20 characters";
     public static final String PASSWORD_LENGTH = "Password must be between 6 and 20 characters";
     public static final String CONFIRM_PASSWORD_REQUIRED = "Confirm password is required";

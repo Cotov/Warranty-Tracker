@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.constant.LogMessages;
+import bg.softuni.warranty_tracker.customExceptions.DataMapException;
+import bg.softuni.warranty_tracker.customExceptions.InvalidSessionException;
+import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.mapper.vendor.VendorMapper;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
@@ -51,11 +54,11 @@ public class VendorService {
 
         Vendor vendor = vendorRepository.findById(vendorUuid).orElse(null);
         if (vendor == null) {
-            throw new RuntimeException(ExceptionMessages.VENDOR_NOT_FOUND);
+            throw new ObjectNotFoundException(ExceptionMessages.VENDOR_NOT_FOUND);
         }
 
         if (!vendor.getUser().getId().equals(userDto.getId())) {
-            throw new RuntimeException(String.format(ExceptionMessages.VENDOR_AND_SESSION_USER_MISMATCH,
+            throw new InvalidSessionException(String.format(ExceptionMessages.VENDOR_AND_SESSION_USER_MISMATCH,
                     vendorUuid, userDto.getId()));
         }
 
@@ -65,7 +68,7 @@ public class VendorService {
     @Transactional
     public VendorDto createVendor(RegisterVendorRequest registerVendorRequest, UserDto userDto) {
         if (registerVendorRequest == null) {
-            throw new RuntimeException(ExceptionMessages.VENDOR_CREATION_FAILED);
+            throw new DataMapException(ExceptionMessages.VENDOR_CREATION_FAILED);
         }
 
         Vendor vendor = vendorMapper.toVendor(registerVendorRequest, userDto);
