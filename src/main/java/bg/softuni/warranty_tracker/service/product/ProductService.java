@@ -15,7 +15,7 @@ import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
-import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
@@ -53,17 +53,17 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDto registerProduct(ProductFormRequest productFormRequest, UserDto userDto) {
+    public ProductDto registerProduct(RegisterProductRequest registerProductRequest, UserDto userDto) {
 
-        if (productFormRequest == null || userDto == null) {
+        if (registerProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
-        if (productRepository.findBySerialNumber(productFormRequest.getSerialNumber()).isPresent()) {
+        if (productRepository.findBySerialNumber(registerProductRequest.getSerialNumber()).isPresent()) {
             throw new RuntimeException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }
-        VendorDto vendorDto = resolveVendor(productFormRequest, userDto);
-        Product product = productMapper.toProduct(productFormRequest, vendorDto, userDto);
+        VendorDto vendorDto = resolveVendor(registerProductRequest, userDto);
+        Product product = productMapper.toProduct(registerProductRequest, vendorDto, userDto);
         productRepository.save(product);
         log.info(LogMessages.PRODUCT_REGISTERED_SUCCESSFULLY);
         return productMapper.toDto(product);
@@ -115,17 +115,17 @@ public class ProductService {
         return productMapper.toDto(product);
     }
 
-    private VendorDto resolveVendor(ProductFormRequest productFormRequest, UserDto userDto) {
+    private VendorDto resolveVendor(RegisterProductRequest registerProductRequest, UserDto userDto) {
         VendorDto vendorDto;
-        if (productFormRequest == null || userDto == null) {
+        if (registerProductRequest == null || userDto == null) {
             throw new RuntimeException(ExceptionMessages.VENDOR_RESOLUTION_FAILED);
         }
-        if (productFormRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
-            vendorDto = vendorService.createVendor(productFormRequest.getRegisterVendorRequest(), userDto);
+        if (registerProductRequest.getVendorId().equals(Constants.CREATE_VENDOR_FLAG)) {
+            vendorDto = vendorService.createVendor(registerProductRequest.getRegisterVendorRequest(), userDto);
         } else {
             UUID vendorUuid;
             try {
-                vendorUuid = UUID.fromString(productFormRequest.getVendorId());
+                vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
             } catch (Exception e) {
                 throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
             }

@@ -18,7 +18,7 @@ import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
-import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.RegisterVendorRequest;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
@@ -50,10 +50,10 @@ public class ProductController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/register-product");
 
-        ProductFormRequest productFormRequest = new ProductFormRequest();
-        modelAndView.addObject("productFormRequest", productFormRequest);
+        RegisterProductRequest registerProductRequest = new RegisterProductRequest();
+        modelAndView.addObject("registerProductRequest", registerProductRequest);
 
-        productFormRequest.setRegisterVendorRequest(new RegisterVendorRequest());
+        registerProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
 
         UserDto user = SessionUtils.getUserDto(session);
         List<VendorDto> vendors = vendorService.getAllByUser(user);
@@ -63,7 +63,7 @@ public class ProductController {
 
     // todo make serial unique
     @PostMapping("/register")
-    public ModelAndView registerProduct(@Valid @ModelAttribute ProductFormRequest productFormRequest,
+    public ModelAndView registerProduct(@Valid @ModelAttribute RegisterProductRequest registerProductRequest,
             BindingResult bindingResult, HttpSession session) {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -74,7 +74,7 @@ public class ProductController {
             return modelAndView;
         }
 
-        productService.registerProduct(productFormRequest, user);
+        productService.registerProduct(registerProductRequest, user);
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
@@ -112,9 +112,6 @@ public class ProductController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("products/edit-product");
         UserDto userDto = SessionUtils.getUserDto(session);
-        if (productId == null) {
-            throw new RuntimeException(ExceptionMessages.FAILED_TO_PARSE_UUID);
-        }
         editProductRequest.setId(UUID.fromString(productId));
         if (bindingResult.hasErrors()) {
             List<VendorDto> vendors = productService.getVendorsForEditProduct(productId, userDto);

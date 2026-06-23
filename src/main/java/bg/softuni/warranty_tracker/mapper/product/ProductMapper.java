@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import bg.softuni.warranty_tracker.model.dto.product.EditProductRequest;
 import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
-import bg.softuni.warranty_tracker.model.dto.product.ProductFormRequest;
+import bg.softuni.warranty_tracker.model.dto.product.RegisterProductRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.vendor.VendorDto;
 import bg.softuni.warranty_tracker.model.entity.product.Product;
@@ -72,23 +72,23 @@ public class ProductMapper {
                         .build();
     }
 
-    public Product toProduct(ProductFormRequest productFormRequest, VendorDto vendorDto, UserDto userDto) {
-        return productFormRequest == null ? null
+    public Product toProduct(RegisterProductRequest registerProductRequest, VendorDto vendorDto, UserDto userDto) {
+        return registerProductRequest == null ? null
                 : Product.builder()
-                        .serialNumber(productFormRequest.getSerialNumber())
-                        .description(productFormRequest.getProductDescription())
-                        .purchaseDate(productFormRequest.getPurchaseDate())
-                        .warrantyStartDate(productFormRequest.getWarrantyStart())
-                        .warrantyEndDate(productFormRequest.getWarrantyEnd())
-                        .physicalReceiptLocation(productFormRequest.getReceiptLocation())
+                        .serialNumber(registerProductRequest.getSerialNumber())
+                        .description(registerProductRequest.getProductDescription())
+                        .purchaseDate(registerProductRequest.getPurchaseDate())
+                        .warrantyStartDate(registerProductRequest.getWarrantyStart())
+                        .warrantyEndDate(registerProductRequest.getWarrantyEnd())
+                        .physicalReceiptLocation(registerProductRequest.getReceiptLocation())
                         .vendor(vendorMapper.toVendor(vendorDto))
                         .user(userMapper.toUser(userDto))
                         .build();
     }
 
-    public ProductFormRequest toProductFormRequest(ProductDto productDto) {
+    public RegisterProductRequest toRegisterProductRequest(ProductDto productDto) {
         return productDto == null ? null
-                : ProductFormRequest.builder()
+                : RegisterProductRequest.builder()
                         .productDescription(productDto.getDescription())
                         .serialNumber(productDto.getSerialNumber())
                         .purchaseDate(productDto.getPurchaseDate())

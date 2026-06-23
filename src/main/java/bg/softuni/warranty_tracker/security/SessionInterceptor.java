@@ -15,8 +15,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
-    private static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/", "/users/login", "/users/register", // todo constants for those?
-            "/error");
+    private static final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of(Constants.UNAUTHENTICATED_ENDPOINTS);
 
     private final UserService userService;
 

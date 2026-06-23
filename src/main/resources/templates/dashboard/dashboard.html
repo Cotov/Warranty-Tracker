@@ -12,7 +12,7 @@
         <div class="dashboard-top">
             <div class="page-header">
                 <h1>SYS.DASHBOARD()</h1>
-                <p>Tracked hardware assets for operator_id</p>
+                <p>Tracked hardware assets for <span th:text="${userDto.username}"></span></p>
                 <p class="product-count">3 products registered</p>
             </div>
             <a th:href="@{/products/register}" class="btn-primary">+ Register Product</a>

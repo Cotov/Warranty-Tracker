@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @ValidateNewVendor
 @ValidateProductDates
-public class EditProductRequest extends ProductFormRequest {
+public class EditProductRequest extends RegisterProductRequest {
 
     private String vendorName;
     private UUID id;
