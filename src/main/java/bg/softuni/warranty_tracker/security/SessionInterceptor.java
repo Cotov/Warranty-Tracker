@@ -35,13 +35,15 @@ public class SessionInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect("/users/login");
+            return false;
         }
 
-        UUID userId = UUID.fromString(String.valueOf(session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE)));
-        if (userId == null) {
+        
+        if (session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE) == null) {
             invalidateSession(session, response);
             return false;
         }
+        UUID userId = (UUID) session.getAttribute(Constants.USER_ID_SESSION_ATTRIBUTE);
 
         UserDto userDto = userService.getById(userId);
 
