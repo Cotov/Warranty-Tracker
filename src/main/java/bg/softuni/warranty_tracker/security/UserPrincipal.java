@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import bg.softuni.warranty_tracker.model.entity.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,11 +21,11 @@ public class UserPrincipal implements UserDetails {
     private UUID id;
     private String username;
     private String password;
-    // private UserRole  role; todo
+    private UserRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -35,10 +36,5 @@ public class UserPrincipal implements UserDetails {
     @Override
     public String getUsername() {
         return this.username;
-    } 
-
-
-
-
-
+    }
 }

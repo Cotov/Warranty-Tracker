@@ -11,4 +11,5 @@ public class LogMessages {
     public static final String CLAIM_UPDATED_SUCCESSFULLY    = "Claim updated successfully: {}";
     public static final String CLAIM_DELETED_SUCCESSFULLY    = "Claim deleted successfully: {}";
     public static final String SESSION_INVALID_REDIRECT      = "Invalid session for request [{}], redirecting to login";
+    public static final String USER_ROLE_TOGGLED_SUCCESSFULLY = "User role toggled successfully: to {}";
 }

@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Table(name = "users")
 @NoArgsConstructor
@@ -45,6 +47,9 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-    
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 }

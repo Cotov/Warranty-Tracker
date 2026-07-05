@@ -2,6 +2,7 @@ package bg.softuni.warranty_tracker.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -10,6 +11,7 @@ import static bg.softuni.warranty_tracker.constant.Constants.UNAUTHENTICATED_END
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
@@ -20,6 +22,8 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .permitAll()
                 .requestMatchers(UNAUTHENTICATED_ENDPOINTS)
                 .permitAll()
+                .requestMatchers("/admin/**")
+                .hasRole("ADMIN")
                 .anyRequest()
                 .authenticated())
                 .formLogin(form -> form

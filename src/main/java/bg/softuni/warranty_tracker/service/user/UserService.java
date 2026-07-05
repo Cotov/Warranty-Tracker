@@ -9,17 +9,20 @@ import bg.softuni.warranty_tracker.constant.ErrorMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
-import bg.softuni.warranty_tracker.model.dto.user.UserLoginRequest;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.entity.user.User;
+import bg.softuni.warranty_tracker.model.entity.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
@@ -67,14 +70,36 @@ public class UserService implements UserDetailsService {
         return userMapper.toUserDto(user.get());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserDto> getAll() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = users.stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void toggleUserRole(UUID userId, UUID currentUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND));
+
+        if (user.getId().equals(currentUserId)) {
+            throw new UserException(ExceptionMessages.CANNOT_CHANGE_OWN_ROLE);
+        }
+
+        user.setRole(user.getRole() == UserRole.ADMIN ? UserRole.USER : UserRole.ADMIN);
+        userRepository.save(user);
+        log.info(LogMessages.USER_ROLE_TOGGLED_SUCCESSFULLY, user.getRole().name());
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
         return UserPrincipal.builder()
-        .id(user.getId())
-        .password(user.getPassword())
-        .username(user.getUsername())
-        .build();
+                .id(user.getId())
+                .password(user.getPassword())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .build();
     }
 }

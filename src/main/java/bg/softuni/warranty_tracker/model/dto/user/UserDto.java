@@ -5,6 +5,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import bg.softuni.warranty_tracker.model.entity.user.UserRole;
+
 @Builder
 @Data
 public class UserDto {
@@ -15,5 +17,5 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
-
+    private UserRole role;
 }

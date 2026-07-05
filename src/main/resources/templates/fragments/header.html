@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-</html>>
-
 <body>
     <header class="global-header" th:fragment="header(activePage)">
         <a th:href="@{/dashboard}" class="logo-container">
@@ -16,6 +14,10 @@
                 <li sec:authorize="isAuthenticated()" class="nav-item"
                     th:classappend="${activePage == 'dashboard'} ? 'active'">
                     <a th:href="@{/dashboard}">Dashboard</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')" class="nav-item"
+                    th:classappend="${activePage == 'admin-users'} ? 'active'">
+                    <a th:href="@{/admin/users}">Manage Users</a>
                 </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item"
                     th:classappend="${activePage == 'login'} ? 'active'">

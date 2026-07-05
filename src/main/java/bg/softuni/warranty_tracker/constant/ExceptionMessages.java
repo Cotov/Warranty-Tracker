@@ -20,4 +20,5 @@ public class ExceptionMessages {
     public static final String UPDATE_CLAIM_FAILED = "Update claim failed";
     public static final String INVALID_STATUS_TRANSITION = "Invalid status transition";
     public static final String PRODUCT_HAS_ACTIVE_CLAIM = "Product has active or pending claim";
+    public static final String CANNOT_CHANGE_OWN_ROLE = "Cannot change your own role";
 }
