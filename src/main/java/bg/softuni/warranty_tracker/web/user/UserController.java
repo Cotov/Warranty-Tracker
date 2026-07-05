@@ -2,16 +2,15 @@ package bg.softuni.warranty_tracker.web.user;
 
 import java.util.UUID;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import bg.softuni.warranty_tracker.service.user.UserService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
-import bg.softuni.warranty_tracker.security.SessionUtils;
-import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.security.UserPrincipal;
 import bg.softuni.warranty_tracker.model.dto.user.UserLoginRequest;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +36,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute UserRegisterRequest userRegisterRequest,
-            BindingResult bindingResult, HttpSession session) {
+            BindingResult bindingResult, @AuthenticationPrincipal UserPrincipal principal) {
 
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
@@ -45,8 +44,6 @@ public class UserController {
             return modelAndView;
         }
         UUID userId = userService.register(userRegisterRequest);
-        SessionUtils.setUserId(session, userId);
-        SessionUtils.setUserDto(session, userService.getById(userId));
         modelAndView.setViewName("redirect:/dashboard");
         return modelAndView;
     }
@@ -57,27 +54,4 @@ public class UserController {
         modelAndView.addObject("userLoginRequest", new UserLoginRequest());
         return modelAndView;
     }
-
-    @PostMapping("/login")
-    public ModelAndView login(@Valid @ModelAttribute UserLoginRequest userLoginRequest, BindingResult bindingResult,
-            HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("users/login");
-        if (bindingResult.hasErrors()) {
-            return modelAndView;
-        }
-        UserDto userDto = userService.login(userLoginRequest);
-        SessionUtils.setUserDto(session, userDto);
-        SessionUtils.setUserId(session, userDto.getId());
-        modelAndView.setViewName("redirect:/dashboard");
-        return modelAndView;
-    }
-
-    @PostMapping("/logout")
-    public ModelAndView logout(HttpSession session) {
-        session.invalidate();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/users/login");
-        return modelAndView;
-    }
-
 }

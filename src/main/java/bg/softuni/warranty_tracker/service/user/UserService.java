@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import bg.softuni.warranty_tracker.repository.user.UserRepository;
+import bg.softuni.warranty_tracker.security.UserPrincipal;
 import bg.softuni.warranty_tracker.constant.ErrorMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
@@ -13,6 +14,9 @@ import bg.softuni.warranty_tracker.model.dto.user.UserLoginRequest;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.entity.user.User;
@@ -24,7 +28,7 @@ import bg.softuni.warranty_tracker.customExceptions.UserException;
 
 @Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,23 +59,6 @@ public class UserService {
         return user.getId();
     }
 
-    public UserDto login(UserLoginRequest userLoginRequest) {
-
-        Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
-
-        if (optionalUser.isEmpty()) {
-            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
-        }
-
-        User user = optionalUser.get();
-        if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
-        }
-
-        log.info(LogMessages.USER_LOGGED_IN_SUCCESSFULLY, user.getUsername());
-        return userMapper.toUserDto(user);
-    }
-
     public UserDto getById(UUID uuid) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isEmpty()) {
@@ -80,4 +67,14 @@ public class UserService {
         return userMapper.toUserDto(user.get());
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        return UserPrincipal.builder()
+        .id(user.getId())
+        .password(user.getPassword())
+        .username(user.getUsername())
+        .build();
+    }
 }

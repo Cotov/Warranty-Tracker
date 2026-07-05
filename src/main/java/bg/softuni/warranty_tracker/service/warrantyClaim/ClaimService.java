@@ -28,6 +28,7 @@ import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
 import bg.softuni.warranty_tracker.customExceptions.DataMapException;
 import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionException;
 import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.UserException;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 
 @Slf4j
@@ -59,6 +60,9 @@ public class ClaimService {
         }
 
         UUID productId = addClaimRequest.getProduct().getId();
+        if (userDto.getId() != addClaimRequest.getProduct().getUser().getId()) {
+            throw new UserException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
+        }
         List<ClaimDto> claimDtos = getClaims(productId.toString(),
                 addClaimRequest.getProduct().getUser());
 
