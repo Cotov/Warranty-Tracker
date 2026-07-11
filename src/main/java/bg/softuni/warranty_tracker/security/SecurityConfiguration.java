@@ -7,12 +7,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static bg.softuni.warranty_tracker.constant.Constants.UNAUTHENTICATED_ENDPOINTS;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfiguration {
+public class SecurityConfiguration implements WebMvcConfigurer {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
