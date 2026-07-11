@@ -37,4 +37,4 @@ build/
 *.mdc
 
 ### Application Properties ###
-src/main/resources/application.properties
+warranty-tracker-app/src/main/resources/application.properties
