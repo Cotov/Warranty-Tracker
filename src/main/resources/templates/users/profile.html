@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Profile | Warranty Tracker', '/css/profile.css')}"></head>
+<body>
+
+<div th:replace="~{fragments/header :: header('profile')}"></div>
+
+<div class="profile-container">
+    <div class="page-header">
+        <h1>SYS.PROFILE()</h1>
+        <p>View and update your operator identity record</p>
+    </div>
+
+    <div class="success-banner" th:if="${param.updated}">
+        <strong>[OK]</strong> Profile updated successfully. Changes are now active.
+    </div>
+
+    <form th:action="@{/users/profile}" th:object="${userProfileEditRequest}" method="post">
+        <input type="hidden" name="_method" value="put" />
+        <div class="form-group">
+            <label for="username">System Username</label>
+            <input type="text" id="username" class="input-readonly"
+                   th:value="${#authentication.principal.username}" readonly aria-readonly="true">
+            <span class="field-hint">// locked — username cannot be changed</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" th:field="*{firstName}" placeholder="e.g. Hristo"
+                       th:classappend="${#fields.hasErrors('firstName')} ? 'input-error'">
+                <span class="error-message" th:classappend="${#fields.hasErrors('firstName')} ? 'is-visible'"
+                      th:errors="*{firstName}">[!] CRITERIA FAILED</span>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" th:field="*{lastName}" placeholder="e.g. Aleksandrov"
+                       th:classappend="${#fields.hasErrors('lastName')} ? 'input-error'">
+                <span class="error-message" th:classappend="${#fields.hasErrors('lastName')} ? 'is-visible'"
+                      th:errors="*{lastName}">[!] CRITERIA FAILED</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Network Email Address</label>
+            <input type="email" id="email" th:field="*{email}" placeholder="name@domain.bg"
+                   th:classappend="${#fields.hasErrors('email')} ? 'input-error'">
+            <span class="error-message" th:classappend="${#fields.hasErrors('email')} ? 'is-visible'"
+                  th:errors="*{email}">[!] CRITERIA FAILED</span>
+        </div>
+
+        <button type="submit" class="btn-submit">Save Profile</button>
+    </form>
+</div>
+
+</body>
+</html>

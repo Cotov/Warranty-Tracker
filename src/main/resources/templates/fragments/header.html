@@ -15,6 +15,10 @@
                     th:classappend="${activePage == 'dashboard'} ? 'active'">
                     <a th:href="@{/dashboard}">Dashboard</a>
                 </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item"
+                    th:classappend="${activePage == 'profile'} ? 'active'">
+                    <a th:href="@{/users/profile}">Profile</a>
+                </li>
                 <li sec:authorize="hasRole('ADMIN')" class="nav-item"
                     th:classappend="${activePage == 'admin-users'} ? 'active'">
                     <a th:href="@{/admin/users}">Manage Users</a>

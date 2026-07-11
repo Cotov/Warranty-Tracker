@@ -9,6 +9,7 @@ import bg.softuni.warranty_tracker.constant.ErrorMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.model.dto.user.UserProfileEditRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,21 @@ public class UserService implements UserDetailsService {
         user.setRole(user.getRole() == UserRole.ADMIN ? UserRole.USER : UserRole.ADMIN);
         userRepository.save(user);
         log.info(LogMessages.USER_ROLE_TOGGLED_SUCCESSFULLY, user.getRole().name());
+    }
+
+    @Transactional
+    public void editProfile(UserProfileEditRequest userProfileEditRequest, UUID currentUserId) {
+        User user = userRepository.findById(currentUserId).orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND));
+        user.setFirstName(userProfileEditRequest.getFirstName());
+        user.setLastName(userProfileEditRequest.getLastName());
+        
+        Optional<User> existingUserWithEmail = userRepository.findByEmail(userProfileEditRequest.getEmail());
+        if (existingUserWithEmail.isPresent() && !existingUserWithEmail.get().getId().equals(currentUserId)) {
+            throw new DuplicateEntityException(ErrorMessages.EMAIL_ALREADY_EXISTS);
+        }
+        user.setEmail(userProfileEditRequest.getEmail());
+        userRepository.save(user);
+        log.info(LogMessages.USER_PROFILE_EDITED_SUCCESSFULLY, user.getUsername());
     }
 
     @Override

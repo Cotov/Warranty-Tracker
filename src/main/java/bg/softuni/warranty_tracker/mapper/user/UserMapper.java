@@ -8,6 +8,7 @@ import bg.softuni.warranty_tracker.model.entity.user.UserRole;
 
 import java.time.LocalDateTime;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
+import bg.softuni.warranty_tracker.model.dto.user.UserProfileEditRequest;
 
 @Component
 public class UserMapper {
@@ -48,6 +49,15 @@ public class UserMapper {
                         .lastName(userDto.getLastName())
                         .createdAt(userDto.getCreatedAt())
                         .role(userDto.getRole())
+                        .build();
+    }
+
+    public UserProfileEditRequest toUserProfileEditRequest(UserDto userDto) {
+        return userDto == null ? null
+                : UserProfileEditRequest.builder()
+                        .email(userDto.getEmail())
+                        .firstName(userDto.getFirstName())
+                        .lastName(userDto.getLastName())
                         .build();
     }
 }
