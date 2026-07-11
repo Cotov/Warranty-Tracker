@@ -3,6 +3,7 @@ package bg.softuni.warranty_tracker.web.warrantyClaim;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,10 @@ import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
-import bg.softuni.warranty_tracker.security.SessionUtils;
+import bg.softuni.warranty_tracker.security.UserPrincipal;
 import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 import bg.softuni.warranty_tracker.service.product.ProductService;
-import jakarta.servlet.http.HttpSession;
+import bg.softuni.warranty_tracker.service.user.UserService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -31,18 +32,20 @@ public class ClaimController {
 
     private final ClaimService claimService;
     private final ProductService productService;
+    private final UserService userService;
 
-    public ClaimController(ClaimService claimService, ProductService productService) {
+    public ClaimController(ClaimService claimService, ProductService productService, UserService userService) {
         this.claimService = claimService;
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping()
-    public ModelAndView getClaims(@PathVariable String productId, HttpSession session) {
+    public ModelAndView getClaims(@PathVariable String productId, @AuthenticationPrincipal UserPrincipal principal) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/claims");
 
-        UserDto userDto = SessionUtils.getUserDto(session);
+        UserDto userDto = userService.getById(principal.getId());
         List<ClaimDto> claims = claimService.getClaims(productId, userDto);
         modelAndView.addObject("claims", claims);
 
@@ -56,11 +59,11 @@ public class ClaimController {
     }
 
     @GetMapping("/add")
-    public ModelAndView addClaim(@PathVariable String productId, HttpSession session) {
+    public ModelAndView addClaim(@PathVariable String productId, @AuthenticationPrincipal UserPrincipal principal) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/add-claim");
 
-        UserDto userDto = SessionUtils.getUserDto(session);
+        UserDto userDto = userService.getById(principal.getId());
         ProductDto product = productService.getById(productId, userDto);
         AddClaimRequest addClaimRequest = AddClaimRequest.builder()
                 .product(product)
@@ -76,9 +79,9 @@ public class ClaimController {
 
     @PostMapping("/add")
     public ModelAndView addClaim(@PathVariable String productId, @Valid @ModelAttribute AddClaimRequest addClaimRequest,
-            BindingResult bindingResult, HttpSession session) {
+            BindingResult bindingResult, @AuthenticationPrincipal UserPrincipal principal) {
 
-        UserDto userDto = SessionUtils.getUserDto(session);
+        UserDto userDto = userService.getById(principal.getId());
         ProductDto product = productService.getById(productId, userDto);
         addClaimRequest.setProduct(product);
         ModelAndView modelAndView = new ModelAndView();
@@ -96,11 +99,11 @@ public class ClaimController {
     }
 
     @GetMapping("/{claimId}/edit")
-    public ModelAndView editClaim(@PathVariable String productId, @PathVariable String claimId, HttpSession session) {
+    public ModelAndView editClaim(@PathVariable String productId, @PathVariable String claimId, @AuthenticationPrincipal UserPrincipal principal) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/edit-claim");
 
-        UserDto userDto = SessionUtils.getUserDto(session);
+        UserDto userDto = userService.getById(principal.getId());
         ProductDto product = productService.getById(productId, userDto);
         modelAndView.addObject("product", product);
 
@@ -119,11 +122,11 @@ public class ClaimController {
     @PutMapping("/{claimId}/edit")
     public ModelAndView editClaim(@PathVariable String productId, @PathVariable String claimId,
             @Valid @ModelAttribute EditClaimRequest editClaimRequest,
-            BindingResult bindingResult, HttpSession session) {
+            BindingResult bindingResult, @AuthenticationPrincipal UserPrincipal principal) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("claims/edit-claim");
-        UserDto userDto = SessionUtils.getUserDto(session);
+        UserDto userDto = userService.getById(principal.getId());
 
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("editClaimRequest", editClaimRequest);

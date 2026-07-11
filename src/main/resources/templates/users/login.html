@@ -12,19 +12,24 @@
             <h1>SYS.AUTH()</h1>
             <p>Authenticate to access your hardware asset tracking module</p>
         </div>
+
+        <p th:if="${param.error}" class="error-message is-visible">
+            Invalid username or password
+        </p>
+
         <form th:action="@{/users/login}" th:object="${userLoginRequest}" method="post">
             <div class="form-group">
                 <label for="username">System Username</label>
                 <input type="text" id="username" name="username" th:field="*{username}" placeholder="operator_id"
-                th:classappend="${#fields.hasErrors('username')} ? 'input-error'">
+                    th:classappend="${#fields.hasErrors('username')} ? 'input-error'">
                 <span class="error-message" th:classappend="${#fields.hasErrors('username')} ? 'is-visible'"
-                th:errors="*{username}">[!] CRITERIA FAILED</span>
+                    th:errors="*{username}">[!] CRITERIA FAILED</span>
             </div>
 
             <div class="form-group">
                 <label for="password">Security Cryptokey</label>
                 <input type="password" id="password" name="password" th:field="*{password}" placeholder="••••••••"
-                th:classappend="${#fields.hasErrors('password')} ? 'input-error'">
+                    th:classappend="${#fields.hasErrors('password')} ? 'input-error'">
                 <span class="error-message" th:classappend="${#fields.hasErrors('password')} ? 'is-visible'"
                     th:errors="*{password}">[!] CRITERIA FAILED</span>
             </div>

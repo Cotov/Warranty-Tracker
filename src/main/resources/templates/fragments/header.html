@@ -1,31 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<header class="global-header" th:fragment="header(activePage)">
-    <a th:href="@{/dashboard}" class="logo-container">
-        <span class="logo-bolt">⚡</span>
-        <span class="logo-text-blue">WNT</span>
-        <span class="logo-text-purple">.TRK</span>
-    </a>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <nav>
-        <ul class="nav-links">
-            <li th:if="${session.userId != null}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active'">
-                <a th:href="@{/dashboard}">Dashboard</a>
-            </li>
-            <li th:if="${session.userId == null}" class="nav-item" th:classappend="${activePage == 'login'} ? 'active'">
-                <a th:href="@{/users/login}">Sign In</a>
-            </li>
-            <li th:if="${session.userId == null}" class="nav-item" th:classappend="${activePage == 'register'} ? 'active'">
-                <a th:href="@{/users/register}">Register</a>
-            </li>
-            <li th:if="${session.userId != null}" class="nav-item">
-                <form th:action="@{/users/logout}" method="post">
-                    <button type="submit" class="sign-out-link">Sign Out</button>
-                </form>
-            </li>
-        </ul>
-    </nav>
-</header>
+<body>
+    <header class="global-header" th:fragment="header(activePage)">
+        <a th:href="@{/dashboard}" class="logo-container">
+            <span class="logo-bolt">⚡</span>
+            <span class="logo-text-blue">WNT</span>
+            <span class="logo-text-purple">.TRK</span>
+        </a>
+
+        <nav>
+            <ul class="nav-links">
+                <li sec:authorize="isAuthenticated()" class="nav-item"
+                    th:classappend="${activePage == 'dashboard'} ? 'active'">
+                    <a th:href="@{/dashboard}">Dashboard</a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item"
+                    th:classappend="${activePage == 'profile'} ? 'active'">
+                    <a th:href="@{/users/profile}">Profile</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')" class="nav-item"
+                    th:classappend="${activePage == 'admin-users'} ? 'active'">
+                    <a th:href="@{/admin/users}">Manage Users</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item"
+                    th:classappend="${activePage == 'login'} ? 'active'">
+                    <a th:href="@{/users/login}">Sign In</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item"
+                    th:classappend="${activePage == 'register'} ? 'active'">
+                    <a th:href="@{/users/register}">Register</a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <form th:action="@{/users/logout}" method="post">
+                        <button type="submit" class="sign-out-link">Sign Out</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
 </body>
+
 </html>

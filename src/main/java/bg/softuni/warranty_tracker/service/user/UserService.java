@@ -4,18 +4,26 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import bg.softuni.warranty_tracker.repository.user.UserRepository;
+import bg.softuni.warranty_tracker.security.UserPrincipal;
 import bg.softuni.warranty_tracker.constant.ErrorMessages;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.model.dto.user.UserRegisterRequest;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
-import bg.softuni.warranty_tracker.model.dto.user.UserLoginRequest;
+import bg.softuni.warranty_tracker.model.dto.user.UserProfileEditRequest;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
 import bg.softuni.warranty_tracker.model.entity.user.User;
+import bg.softuni.warranty_tracker.model.entity.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.LogMessages;
 import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
@@ -24,7 +32,7 @@ import bg.softuni.warranty_tracker.customExceptions.UserException;
 
 @Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,23 +63,6 @@ public class UserService {
         return user.getId();
     }
 
-    public UserDto login(UserLoginRequest userLoginRequest) {
-
-        Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
-
-        if (optionalUser.isEmpty()) {
-            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
-        }
-
-        User user = optionalUser.get();
-        if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new UserException(ErrorMessages.INVALID_LOGIN_CREDENTIALS);
-        }
-
-        log.info(LogMessages.USER_LOGGED_IN_SUCCESSFULLY, user.getUsername());
-        return userMapper.toUserDto(user);
-    }
-
     public UserDto getById(UUID uuid) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isEmpty()) {
@@ -80,4 +71,51 @@ public class UserService {
         return userMapper.toUserDto(user.get());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserDto> getAll() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = users.stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void toggleUserRole(UUID userId, UUID currentUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND));
+
+        if (user.getId().equals(currentUserId)) {
+            throw new UserException(ExceptionMessages.CANNOT_CHANGE_OWN_ROLE);
+        }
+
+        user.setRole(user.getRole() == UserRole.ADMIN ? UserRole.USER : UserRole.ADMIN);
+        userRepository.save(user);
+        log.info(LogMessages.USER_ROLE_TOGGLED_SUCCESSFULLY, user.getRole().name());
+    }
+
+    @Transactional
+    public void editProfile(UserProfileEditRequest userProfileEditRequest, UUID currentUserId) {
+        User user = userRepository.findById(currentUserId).orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND));
+        user.setFirstName(userProfileEditRequest.getFirstName());
+        user.setLastName(userProfileEditRequest.getLastName());
+
+        Optional<User> existingUserWithEmail = userRepository.findByEmail(userProfileEditRequest.getEmail());
+        if (existingUserWithEmail.isPresent() && !existingUserWithEmail.get().getId().equals(currentUserId)) {
+            throw new DuplicateEntityException(ErrorMessages.EMAIL_ALREADY_EXISTS);
+        }
+        user.setEmail(userProfileEditRequest.getEmail());
+        userRepository.save(user);
+        log.info(LogMessages.USER_PROFILE_EDITED_SUCCESSFULLY, user.getUsername());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        return UserPrincipal.builder()
+                .id(user.getId())
+                .password(user.getPassword())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .build();
+    }
 }

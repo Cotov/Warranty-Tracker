@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Users | Warranty Tracker', '/css/admin-users.css')}"></head>
+
+<body class="admin-users-page">
+
+    <div th:replace="~{fragments/header :: header('admin-users')}"></div>
+
+    <main class="admin-container">
+
+        <div class="page-top">
+            <div class="page-header">
+                <h1>SYS.USER_MGMT()</h1>
+                <p>Manage user roles across the system.</p>
+                <p class="user-count" th:text="${users.size()} + ' users registered'">0 users registered</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Admin access</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}"
+                        th:classappend="${user.id == #authentication.principal.id} ? 'is-self' : ''">
+                        <td class="col-username">
+                            <span th:text="${user.username}">username</span>
+                            <span class="you-label" th:if="${user.id == #authentication.principal.id}">(you)</span>
+                        </td>
+                        <td class="col-email" th:text="${user.email}">email</td>
+                        <td class="col-name" th:text="${user.firstName} + ' ' + ${user.lastName}">name</td>
+                        <td class="col-role">
+                            <span class="status-badge" th:classappend="${user.role.name().toLowerCase()}"
+                                th:text="${user.role}">USER</span>
+                        </td>
+                        <td class="col-toggle">
+                            <label th:if="${user.id == #authentication.principal.id}" class="role-toggle is-disabled"
+                                title="Cannot change your own role">
+                                <span class="role-toggle-label"
+                                    th:text="${user.role.name() == 'ADMIN' ? 'On' : 'Off'}">On</span>
+                                <input type="checkbox" th:checked="${user.role.name() == 'ADMIN'}" disabled>
+                                <span class="role-toggle-track"><span class="role-toggle-thumb"></span></span>
+                            </label>
+                            <span th:if="${user.id == #authentication.principal.id}" class="self-note">Self-demotion
+                                blocked</span>
+
+                            <form th:if="${user.id != #authentication.principal.id}"
+                                th:action="@{/admin/users/{userId}/role(userId=${user.id})}" method="post">
+                                <input type="hidden" name="role"
+                                    th:value="${user.role.name() == 'ADMIN' ? 'USER' : 'ADMIN'}">
+                                <label class="role-toggle">
+                                    <span class="role-toggle-label"
+                                        th:text="${user.role.name() == 'ADMIN' ? 'On' : 'Off'}">Off</span>
+                                    <input type="checkbox" th:checked="${user.role.name() == 'ADMIN'}"
+                                        onchange="this.form.submit()">
+                                    <span class="role-toggle-track"><span class="role-toggle-thumb"></span></span>
+                                </label>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
+

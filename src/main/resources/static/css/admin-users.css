@@ -1,0 +1,220 @@
+body.admin-users-page {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 70px 0 40px;
+}
+
+.admin-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+}
+
+.page-top {
+    margin-bottom: 28px;
+}
+
+.page-header {
+    margin-bottom: 0;
+}
+
+.user-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table thead {
+    background-color: rgba(9, 13, 22, 0.6);
+}
+
+.users-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.users-table th:last-child {
+    text-align: right;
+}
+
+.users-table td {
+    padding: 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+    background-color: var(--primary-glow);
+}
+
+.users-table tbody tr.is-self {
+    background-color: rgba(168, 85, 247, 0.04);
+}
+
+.users-table tbody tr.is-self:hover {
+    background-color: rgba(168, 85, 247, 0.07);
+}
+
+.col-username {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.col-username .you-label {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--secondary);
+    opacity: 0.85;
+}
+
+.col-email {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.col-name {
+    color: var(--text-main);
+}
+
+.col-role {
+    white-space: nowrap;
+}
+
+.col-toggle {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-badge.user {
+    color: var(--text-muted);
+    background-color: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.status-badge.admin {
+    color: var(--secondary);
+    background-color: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.role-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.role-toggle.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.role-toggle-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    min-width: 36px;
+    text-align: right;
+}
+
+.role-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.role-toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: rgba(148, 163, 184, 0.15);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.role-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.role-toggle input:checked + .role-toggle-track {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.5);
+}
+
+.role-toggle input:checked + .role-toggle-track .role-toggle-thumb {
+    left: 22px;
+    background: var(--secondary);
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
+.role-toggle input:focus-visible + .role-toggle-track {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.role-toggle.is-disabled .role-toggle-track {
+    filter: grayscale(0.3);
+}
+
+.self-note {
+    display: block;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px) {
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .users-table {
+        min-width: 720px;
+    }
+}
