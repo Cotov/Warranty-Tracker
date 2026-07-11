@@ -17,8 +17,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotEmpty;
-import bg.softuni.warranty_tracker.constant.ValidationMessages;
 
 @Table(name = "vendors")
 @NoArgsConstructor
