@@ -6,7 +6,6 @@ import bg.softuni.warranty_tracker.model.entity.user.User;
 import java.util.UUID;
 import java.util.Optional;
 
-
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 

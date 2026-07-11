@@ -15,7 +15,7 @@ import lombok.Builder;
 @Builder
 public class UserProfileEditRequest {
     @NotBlank(message = ValidationMessages.FIRST_NAME_REQUIRED)
-    @Size(min = 3, max = 20, message = ValidationMessages.FIRST_NAME_LENGTH) 
+    @Size(min = 3, max = 20, message = ValidationMessages.FIRST_NAME_LENGTH)
     private String firstName;
 
     @NotBlank(message = ValidationMessages.LAST_NAME_REQUIRED)

@@ -97,7 +97,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(currentUserId).orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.USER_NOT_FOUND));
         user.setFirstName(userProfileEditRequest.getFirstName());
         user.setLastName(userProfileEditRequest.getLastName());
-        
+
         Optional<User> existingUserWithEmail = userRepository.findByEmail(userProfileEditRequest.getEmail());
         if (existingUserWithEmail.isPresent() && !existingUserWithEmail.get().getId().equals(currentUserId)) {
             throw new DuplicateEntityException(ErrorMessages.EMAIL_ALREADY_EXISTS);
