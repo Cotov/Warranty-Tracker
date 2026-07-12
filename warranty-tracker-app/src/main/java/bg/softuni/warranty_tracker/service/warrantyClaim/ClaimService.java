@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,12 @@ import bg.softuni.warranty_tracker.model.dto.user.UserDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.AddClaimRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.EditClaimRequest;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.CreateAuditEntryRequest;
+import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.CreateAuditEntryResponse;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.Claim;
 import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 import bg.softuni.warranty_tracker.repository.warrantyClaim.ClaimRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.constant.LogMessages;
@@ -30,21 +34,19 @@ import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionExcep
 import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
 import bg.softuni.warranty_tracker.customExceptions.UserException;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
+import bg.softuni.warranty_tracker.service.audit.AuditService;
+import bg.softuni.warranty_tracker.mapper.audit.AuditMapper;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ClaimService {
 
     private final ProductService productService;
     private final ClaimRepository claimRepository;
     private final ClaimMapper claimMapper;
-
-    public ClaimService(ClaimRepository claimRepository, ClaimMapper claimMapper,
-            ProductService productService) {
-        this.claimRepository = claimRepository;
-        this.claimMapper = claimMapper;
-        this.productService = productService;
-    }
+    private final AuditService auditService;
+    private final AuditMapper auditMapper;
 
     public List<ClaimDto> getClaims(String productId, UserDto userDto) {
         productService.verifyProductUser(UUID.fromString(productId), userDto.getId());
@@ -105,6 +107,7 @@ public class ClaimService {
         verifyClaimUser(claim, userDto.getId());
 
         ClaimStatus currentStatus = claim.getStatus();
+        ClaimStatus previousStatus = currentStatus;
         if (INVALID_STATUS_TRANSITIONS.get(currentStatus).contains(editClaimRequest.getStatus())) {
             throw new InvalidStatusTransitionException(ExceptionMessages.INVALID_STATUS_TRANSITION);
         }
@@ -116,6 +119,13 @@ public class ClaimService {
         }
         claimRepository.save(claim);
         log.info(LogMessages.CLAIM_UPDATED_SUCCESSFULLY, claim.getId());
+
+        if (previousStatus != editClaimRequest.getStatus()) {
+            CreateAuditEntryRequest createAuditEntryRequest = auditMapper.toCreateAuditEntryRequest(claim.getId(),
+                    previousStatus, editClaimRequest.getStatus());
+            ResponseEntity<CreateAuditEntryResponse> response = auditService.createAuditEntry(createAuditEntryRequest);
+            log.info(LogMessages.AUDIT_ENTRY_CREATED_SUCCESSFULLY, response.getBody().getAuditEntryId());
+        }
     }
 
     private void verifyClaimUser(Claim claim, UUID userId) {
@@ -126,20 +136,23 @@ public class ClaimService {
         productService.verifyProductUser(claim.getProduct(), userId);
     }
 
+    @Transactional
     public void deleteClaimById(String claimId, UserDto userDto) {
         Claim claim = claimRepository.findById(UUID.fromString(claimId))
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND));
         verifyClaimUser(claim, userDto.getId());
         claimRepository.delete(claim);
         log.info(LogMessages.CLAIM_DELETED_SUCCESSFULLY, claim.getId());
+
+        ResponseEntity<Void> response = auditService.deleteAuditEntries(claim.getId());
+        log.info(LogMessages.AUDIT_ENTRIES_DELETED_SUCCESSFULLY, claim.getId());
     }
 
     private static final Map<ClaimStatus, Set<ClaimStatus>> INVALID_STATUS_TRANSITIONS = Map.of(
-        ClaimStatus.PENDING, Set.of(ClaimStatus.RESOLVED),
-        ClaimStatus.ACTIVE, Set.of(ClaimStatus.PENDING),
-        ClaimStatus.REJECTED, Set.of(ClaimStatus.ACTIVE, ClaimStatus.RESOLVED),
-        ClaimStatus.RESOLVED, Set.of(ClaimStatus.ACTIVE, ClaimStatus.REJECTED)
-    );
+            ClaimStatus.PENDING, Set.of(ClaimStatus.RESOLVED),
+            ClaimStatus.ACTIVE, Set.of(ClaimStatus.PENDING),
+            ClaimStatus.REJECTED, Set.of(ClaimStatus.ACTIVE, ClaimStatus.RESOLVED),
+            ClaimStatus.RESOLVED, Set.of(ClaimStatus.ACTIVE, ClaimStatus.REJECTED));
 
     public Set<ClaimStatus> getValidStatusTransitions(ClaimStatus currentStatus) {
         Set<ClaimStatus> validStatusTransitions = new HashSet<>();

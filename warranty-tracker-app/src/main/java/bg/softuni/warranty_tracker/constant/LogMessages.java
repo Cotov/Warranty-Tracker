@@ -13,4 +13,6 @@ public class LogMessages {
     public static final String SESSION_INVALID_REDIRECT      = "Invalid session for request [{}], redirecting to login";
     public static final String USER_ROLE_TOGGLED_SUCCESSFULLY = "User role toggled successfully: to {}";
     public static final String USER_PROFILE_EDITED_SUCCESSFULLY = "User profile edited successfully: {}";
+    public static final String AUDIT_ENTRY_CREATED_SUCCESSFULLY = "Audit entry created successfully: {}";
+    public static final String AUDIT_ENTRIES_DELETED_SUCCESSFULLY = "Audit entries deleted successfully: {}";
 }

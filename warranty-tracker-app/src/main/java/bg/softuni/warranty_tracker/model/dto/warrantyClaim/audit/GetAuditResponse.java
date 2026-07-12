@@ -1,11 +1,11 @@
-package bg.softuni.claim_audit_svc.model.dto.claim_audit;
+package bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit;
 
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +14,5 @@ import lombok.Data;
 public class GetAuditResponse {
 
     private List<GetAuditResponseEntry> auditEntries;
-
 
 }

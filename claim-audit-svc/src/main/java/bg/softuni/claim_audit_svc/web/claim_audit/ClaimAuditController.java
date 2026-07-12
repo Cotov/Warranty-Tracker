@@ -26,7 +26,7 @@ public class ClaimAuditController {
 
     private final ClaimAuditEntryService claimAuditEntryService;
 
-    @GetMapping("/{claimId}/audit")
+    @GetMapping("/audit/{claimId}")
     public ResponseEntity<GetAuditResponse> getAuditEntries(@PathVariable UUID claimId) {
         GetAuditResponse response = claimAuditEntryService.getAuditEntries(claimId);
         return ResponseEntity

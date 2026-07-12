@@ -11,7 +11,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetClaimAuditEntry {
+public class GetAuditResponseEntry {
 
     private LocalDateTime changedAt;
     private String previousStatus;

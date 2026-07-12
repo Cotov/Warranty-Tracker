@@ -12,7 +12,7 @@ import bg.softuni.claim_audit_svc.mapper.claim_audit_entry.ClaimAuditEntryMapper
 import bg.softuni.claim_audit_svc.model.dto.claim_audit.CreateAuditEntryRequest;
 import bg.softuni.claim_audit_svc.model.dto.claim_audit.CreateAuditEntryResponse;
 import bg.softuni.claim_audit_svc.model.dto.claim_audit.GetAuditResponse;
-import bg.softuni.claim_audit_svc.model.dto.claim_audit.GetClaimAuditEntry;
+import bg.softuni.claim_audit_svc.model.dto.claim_audit.GetAuditResponseEntry;
 import bg.softuni.claim_audit_svc.model.entity.ClaimAuditEntry;
 import bg.softuni.claim_audit_svc.repository.claim_audit.ClaimAuditRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class ClaimAuditEntryService {
     public GetAuditResponse getAuditEntries(UUID claimId) {
         List<ClaimAuditEntry> auditEntries = claimAuditRepository.findByClaimIdOrderByChangedAtDesc(claimId);
 
-        List<GetClaimAuditEntry> auditEntryDtos = auditEntries.stream()
+        List<GetAuditResponseEntry> auditEntryDtos = auditEntries.stream()
                 .map(claimAuditEntryMapper::toGetAuditEntry)
                 .toList();
 
