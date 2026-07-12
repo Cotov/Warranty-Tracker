@@ -9,4 +9,6 @@ import bg.softuni.claim_audit_svc.model.entity.ClaimAuditEntry;
 public interface ClaimAuditRepository extends JpaRepository<ClaimAuditEntry, UUID> {
 
     List<ClaimAuditEntry> findByClaimIdOrderByChangedAtDesc(UUID claimId);
+
+    void deleteByClaimId(UUID claimId);
 }

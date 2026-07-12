@@ -45,4 +45,9 @@ public class ClaimAuditEntryService {
                 .auditEntries(auditEntryDtos)
                 .build();
     }
+
+    @Transactional
+    public void deleteAuditEntriesForClaim(UUID claimId) {
+        claimAuditRepository.deleteByClaimId(claimId);
+    }
 }
