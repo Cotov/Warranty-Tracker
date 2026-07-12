@@ -20,13 +20,13 @@ import bg.softuni.claim_audit_svc.service.claim_audit.ClaimAuditEntryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/claims")
+@RequestMapping("/api/v1/claims/audit")
 @RequiredArgsConstructor
 public class ClaimAuditController {
 
     private final ClaimAuditEntryService claimAuditEntryService;
 
-    @GetMapping("/audit/{claimId}")
+    @GetMapping("/{claimId}")
     public ResponseEntity<GetAuditResponse> getAuditEntries(@PathVariable UUID claimId) {
         GetAuditResponse response = claimAuditEntryService.getAuditEntries(claimId);
         return ResponseEntity
@@ -34,7 +34,7 @@ public class ClaimAuditController {
                 .body(response);
     }
 
-    @PostMapping("/audit")
+    @PostMapping
     public ResponseEntity<CreateAuditEntryResponse> postAuditEntry(@Valid @RequestBody CreateAuditEntryRequest request) {
 
         CreateAuditEntryResponse response = claimAuditEntryService.createAuditEntry(request);
@@ -43,7 +43,7 @@ public class ClaimAuditController {
                 .body(response);
     }
 
-    @DeleteMapping("/audit/{claimId}")
+    @DeleteMapping("/{claimId}")
     public ResponseEntity<Void> deleteAuditEntries(@PathVariable UUID claimId) {
         claimAuditEntryService.deleteAuditEntriesForClaim(claimId);
         return ResponseEntity

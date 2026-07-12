@@ -8,14 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class ApiKeyAuthentication implements Authentication {
 
-    private final String apiKey;
+    private final String PRINCIPAL = "api-client";
     private boolean authenticated = true;
 
-    public ApiKeyAuthentication(String apiKey) {
-        this.apiKey = apiKey;
+    public ApiKeyAuthentication() {
     }
 
-    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -23,7 +21,7 @@ public class ApiKeyAuthentication implements Authentication {
 
     @Override
     public Object getCredentials() {
-        return apiKey;
+        return null;
     }
 
     @Override
@@ -33,7 +31,7 @@ public class ApiKeyAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return apiKey;
+        return PRINCIPAL;
     }
 
     @Override
@@ -48,8 +46,7 @@ public class ApiKeyAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return "API-Key";
+        return PRINCIPAL;
     }
-
 
 }

@@ -31,7 +31,7 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
                 throw new BadCredentialsException("Invalid API key");
             }
 
-            Authentication authentication = new ApiKeyAuthentication(providedApiKey);
+            Authentication authentication = new ApiKeyAuthentication();
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
 

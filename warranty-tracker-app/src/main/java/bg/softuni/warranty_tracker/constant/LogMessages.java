@@ -15,4 +15,5 @@ public class LogMessages {
     public static final String USER_PROFILE_EDITED_SUCCESSFULLY = "User profile edited successfully: {}";
     public static final String AUDIT_ENTRY_CREATED_SUCCESSFULLY = "Audit entry created successfully: {}";
     public static final String AUDIT_ENTRIES_DELETED_SUCCESSFULLY = "Audit entries deleted successfully: {}";
+    public static final String AUDIT_ENTRIES_FETCHED_SUCCESSFULLY = "Audit entries fetched successfully for claim: {}";
 }
