@@ -51,7 +51,7 @@ public class AuditService {
 
     public void createAuditEntry(UUID claimId, ClaimStatus previousStatus, ClaimStatus newStatus) {
         try {
-        CreateAuditEntryRequest request = auditMapper.toCreateAuditEntryRequest(claimId, previousStatus, newStatus);
+            CreateAuditEntryRequest request = auditMapper.toCreateAuditEntryRequest(claimId, previousStatus, newStatus);
             ResponseEntity<CreateAuditEntryResponse> response = auditClient.createAuditEntry(request, apiKey);
             log.info(LogMessages.AUDIT_ENTRY_CREATED_SUCCESSFULLY, response.getBody().getAuditEntryId());
         } catch (FeignException e) {

@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import bg.softuni.warranty_tracker.security.UserPrincipal;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.ClaimHistoryDto;
+import bg.softuni.warranty_tracker.security.UserPrincipal;
+import bg.softuni.warranty_tracker.service.audit.ClaimHistoryService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClaimHistoryController {
 
-    private final bg.softuni.warranty_tracker.service.audit.ClaimHistoryService claimHistoryService;
+    private final ClaimHistoryService claimHistoryService;
 
     @GetMapping
     public ModelAndView getClaimHistory(@PathVariable UUID productId, @PathVariable UUID claimId,

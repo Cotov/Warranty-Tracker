@@ -4,14 +4,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import bg.softuni.warranty_tracker.mapper.claimHistory.ClaimHistoryMapper;
 import bg.softuni.warranty_tracker.model.dto.user.UserDto;
-import bg.softuni.warranty_tracker.model.dto.product.ProductDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.ClaimDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.ClaimHistoryDto;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.GetAuditResponse;
-import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 import bg.softuni.warranty_tracker.service.user.UserService;
-import bg.softuni.warranty_tracker.mapper.claimHistory.ClaimHistoryMapper;
+import bg.softuni.warranty_tracker.service.warrantyClaim.ClaimService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
