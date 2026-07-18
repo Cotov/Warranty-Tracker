@@ -26,13 +26,13 @@
         </div>
 
         <div class="table-wrapper">
-            <table class="claims-table">
+            <table class="claims-table data-table">
                 <thead>
                     <tr>
                         <th>Submitted</th>
                         <th>Fault Description</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th class="col-actions-header" aria-label="Row actions"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,9 +41,21 @@
                         <td class="col-description" th:text="${claim.faultDescription}"></td>
                         <td><span class="status-badge " th:classappend="${claim.status.name().toLowerCase()}"
                                 th:text="${claim.status}"></span></td>
-                        <td class="col-actions"><a
-                                th:href="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}"
-                                class="action-link">Edit</a></td>
+                        <td class="col-actions">
+                            <a th:href="@{/products/{productId}/claims/{claimId}/edit(productId=${product.id}, claimId=${claim.id})}"
+                                class="action-link">Edit</a>
+                            <span class="action-sep">·</span>
+                            <a th:href="@{/products/{productId}/claims/{claimId}/history(productId=${product.id}, claimId=${claim.id})}"
+                                class="action-link action-link-accent">LOG()</a>
+                            <span class="action-sep">·</span>
+                            <form th:id="|delete-claim-form-${claim.id}|"
+                                th:action="@{/products/{productId}/claims/{claimId}(productId=${product.id}, claimId=${claim.id})}"
+                                method="post" class="delete-form">
+                                <input type="hidden" name="_method" value="delete" />
+                            </form>
+                            <button type="button" class="action-link danger" data-delete-trigger
+                                th:attr="data-form-id=|delete-claim-form-${claim.id}|">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -57,6 +69,59 @@
         </div>
 
     </main>
+
+    <div class="modal-overlay" id="deleteClaimModal" role="dialog" aria-modal="true"
+        aria-labelledby="deleteClaimModalTitle" hidden>
+        <div class="confirm-dialog">
+            <div class="confirm-dialog-label">// warning</div>
+            <h2 id="deleteClaimModalTitle">CONFIRM_DELETE()</h2>
+            <p class="confirm-dialog-message">
+                You are about to permanently delete this warranty claim. This action cannot be undone.
+            </p>
+            <div class="confirm-dialog-warning">
+                <strong>[!]</strong> Deleting this claim will also delete its entire <strong>claim history</strong>
+                — all recorded status changes and audit log entries will be removed.
+            </div>
+            <div class="confirm-dialog-actions">
+                <button type="button" class="btn-cancel" id="cancelDeleteClaim">Cancel</button>
+                <button type="submit" class="btn-danger" id="confirmDeleteClaim">Delete Claim</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.getElementById('deleteClaimModal');
+            const confirmBtn = document.getElementById('confirmDeleteClaim');
+            const cancelBtn = document.getElementById('cancelDeleteClaim');
+
+            function openModal(formId) {
+                confirmBtn.setAttribute('form', formId);
+                modal.hidden = false;
+                modal.classList.add('is-open');
+            }
+
+            function closeModal() {
+                modal.classList.remove('is-open');
+                modal.hidden = true;
+                confirmBtn.removeAttribute('form');
+            }
+
+            document.querySelectorAll('[data-delete-trigger]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    openModal(btn.getAttribute('data-form-id'));
+                });
+            });
+
+            cancelBtn.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
 
 </body>
 

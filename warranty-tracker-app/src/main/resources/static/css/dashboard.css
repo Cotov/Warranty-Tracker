@@ -4,7 +4,8 @@ body.dashboard-page {
     padding: 70px 0 40px;
 }
 
-.dashboard-container {
+.dashboard-container,
+.workspace-container {
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
@@ -140,16 +141,6 @@ body.dashboard-page {
     color: var(--text-main);
 }
 
-.status-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 3px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
 .status-badge.ACTIVE {
     color: var(--success-color);
     background-color: var(--success-bg);
@@ -168,40 +159,8 @@ body.dashboard-page {
     border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
-.col-actions {
-    text-align: right;
-    white-space: nowrap;
-}
-
 .delete-form {
     display: inline;
-}
-
-.action-link {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    text-decoration: none;
-    color: var(--text-muted);
-    transition: color 0.2s ease;
-    padding: 4px 0;
-}
-
-button.action-link {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.action-link:hover { color: var(--primary); }
-.action-link.danger:hover { color: var(--accent); }
-
-.action-separator {
-    color: var(--border-color);
-    margin: 0 8px;
-    font-size: 11px;
 }
 
 @media (max-width: 768px) {

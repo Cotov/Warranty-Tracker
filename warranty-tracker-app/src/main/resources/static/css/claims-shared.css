@@ -1,0 +1,159 @@
+/* Shared claim UI — product context, claim panel, claim status badges, audit transitions */
+
+/* ── Product context ── */
+.product-context {
+    background-color: rgba(9, 13, 22, 0.5);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--primary);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+
+.product-context-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.product-context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px 20px;
+}
+
+.product-context-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.product-context-field span {
+    font-size: 13px;
+    color: var(--text-main);
+    letter-spacing: 0.3px;
+}
+
+/* ── Claim panel (summary on history, details shell on edit) ── */
+.claim-panel,
+.claim-details {
+    background-color: rgba(9, 13, 22, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 18px 20px;
+}
+
+.claim-panel {
+    margin-bottom: 24px;
+}
+
+.claim-panel-header,
+.claim-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.claim-panel-label,
+.claim-details-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+}
+
+.claim-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+}
+
+.claim-meta--wide {
+    grid-template-columns: 140px 1fr;
+}
+
+.claim-meta-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+}
+
+.claim-meta-field span {
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* ── Claim status badges ── */
+.status-badge.pending {
+    color: var(--secondary);
+    background-color: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.status-badge.active {
+    color: var(--primary);
+    background-color: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.status-badge.resolved {
+    color: var(--success-color);
+    background-color: var(--success-bg);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.status-badge.rejected {
+    color: var(--text-muted);
+    background-color: rgba(148, 163, 184, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* ── Section label ── */
+.section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+/* ── Audit status transition ── */
+.status-transition {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.transition-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+    letter-spacing: 0;
+}
+
+@media (max-width: 768px) {
+    .product-context-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .claim-meta,
+    .claim-meta--wide {
+        grid-template-columns: 1fr;
+    }
+}

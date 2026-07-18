@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -144,6 +145,15 @@ public class ClaimController {
         }
         claimService.updateClaim(editClaimRequest, userDto);
         modelAndView.setViewName("redirect:/products/{productId}/claims");
+        return modelAndView;
+    }
+
+    @DeleteMapping("/{claimId}")
+    public ModelAndView deleteClaim(@PathVariable String productId, @PathVariable String claimId, @AuthenticationPrincipal UserPrincipal principal) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/products/{productId}/claims");
+        UserDto userDto = userService.getById(principal.getId());
+        claimService.deleteClaimById(claimId, userDto);
         return modelAndView;
     }
 }

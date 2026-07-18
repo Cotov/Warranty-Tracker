@@ -14,6 +14,8 @@ import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionExcep
 import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
 import bg.softuni.warranty_tracker.customExceptions.UserException;
 
+//todo flash attributes and rest api error handling
+//rest api errorResponse DTO
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
