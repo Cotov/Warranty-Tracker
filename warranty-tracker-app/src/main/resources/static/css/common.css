@@ -144,6 +144,120 @@ body {
     text-decoration: underline;
 }
 
+/* === Workspace layout (dashboard, claims, history) === */
+body.workspace-page {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 70px 0 40px;
+}
+
+.workspace-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+}
+
+/* === Status badge base === */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* === Row actions === */
+.col-actions-header {
+    width: 1%;
+    padding: 14px 16px;
+}
+
+.col-actions {
+    text-align: right;
+    white-space: nowrap;
+    width: 1%;
+}
+
+.action-link {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    padding: 4px 0;
+}
+
+button.action-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.action-link:hover {
+    color: var(--primary);
+}
+
+.action-link-accent {
+    color: var(--secondary);
+}
+
+.action-link-accent:hover {
+    color: var(--primary);
+}
+
+.action-link.danger:hover {
+    color: var(--accent);
+}
+
+.action-sep,
+.action-separator {
+    color: var(--border-color);
+    margin: 0 6px;
+    font-size: 11px;
+}
+
+/* === Data tables === */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background-color: rgba(9, 13, 22, 0.6);
+}
+
+.data-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+    padding: 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--primary-glow);
+}
+
 /* === Table wrapper === */
 .table-wrapper {
     background: var(--card-bg);
@@ -178,6 +292,13 @@ body {
     color: var(--text-muted);
     margin-bottom: 24px;
     letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+
+.empty-state .empty-hint {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 0;
 }
 
 /* === Vendor create panel === */

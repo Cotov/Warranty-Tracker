@@ -10,7 +10,8 @@ import bg.softuni.warranty_tracker.model.entity.warrantyClaim.ClaimStatus;
 @Component
 public class AuditMapper {
 
-    public CreateAuditEntryRequest toCreateAuditEntryRequest(UUID claimId, ClaimStatus previousStatus, ClaimStatus newStatus) {
+    public CreateAuditEntryRequest toCreateAuditEntryRequest(UUID claimId, ClaimStatus previousStatus,
+            ClaimStatus newStatus) {
         return CreateAuditEntryRequest.builder()
                 .claimId(claimId)
                 .previousStatus(previousStatus.name())

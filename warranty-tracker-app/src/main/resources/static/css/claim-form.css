@@ -1,3 +1,5 @@
+@import url('claims-shared.css');
+
 body.claim-form-page {
     justify-content: flex-start;
 }
@@ -28,45 +30,8 @@ body.claim-form-page {
     margin-bottom: 28px;
 }
 
-/* ── Product context ── */
-.product-context {
-    background-color: rgba(9, 13, 22, 0.5);
-    border: 1px solid var(--border-color);
-    border-left: 3px solid var(--primary);
-    border-radius: 4px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-}
-
-.product-context-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--primary);
-    margin-bottom: 12px;
-}
-
-.product-context-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px 20px;
-}
-
-.product-context-field label {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-
-.product-context-field span {
-    font-size: 13px;
-    color: var(--text-main);
-    letter-spacing: 0.3px;
+.claim-details .claim-meta {
+    margin-bottom: 18px;
 }
 
 /* ── Status note (add claim) ── */
@@ -214,85 +179,6 @@ body.claim-form-page {
     cursor: not-allowed;
 }
 
-/* ── Claim details (edit claim) ── */
-.claim-details {
-    background-color: rgba(9, 13, 22, 0.3);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 18px 20px;
-}
-
-.claim-details-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-}
-
-.claim-details-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 3px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.status-badge.pending {
-    color: var(--secondary);
-    background-color: rgba(168, 85, 247, 0.08);
-    border: 1px solid rgba(168, 85, 247, 0.25);
-}
-
-.status-badge.active {
-    color: var(--primary);
-    background-color: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.25);
-}
-
-.status-badge.resolved {
-    color: var(--success-color);
-    background-color: rgba(52, 211, 153, 0.08);
-    border: 1px solid rgba(52, 211, 153, 0.25);
-}
-
-.status-badge.rejected {
-    color: var(--text-muted);
-    background-color: rgba(148, 163, 184, 0.08);
-    border: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.claim-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 18px;
-}
-
-.claim-meta-field label {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 3px;
-}
-
-.claim-meta-field span {
-    font-size: 13px;
-    color: var(--text-main);
-}
-
 /* ── Footer ── */
 .footer-text {
     margin-top: 24px;
@@ -301,9 +187,5 @@ body.claim-form-page {
 @media (max-width: 640px) {
     .claim-form-container {
         padding: 28px 20px;
-    }
-
-    .product-context-grid {
-        grid-template-columns: 1fr;
     }
 }

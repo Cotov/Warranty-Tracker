@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Claim History | Warranty Tracker', '/css/claim-history.css')}"></head>
+
+<body class="claim-history-page">
+
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
+
+    <main class="workspace-container">
+
+        <a th:href="@{/products/{productId}/claims(productId=${productId})}" class="back-link">Back to Claims</a>
+
+        <div class="page-header">
+            <h1>SYS.CLAIM_HISTORY()</h1>
+            <p>Status change timeline for this warranty claim</p>
+            <p class="entry-count"
+                th:text="${claimHistoryDto.auditResponse.auditEntries.size()} + ' status change(s) recorded'"></p>
+        </div>
+
+        <div class="product-context">
+            <div class="product-context-label">// product</div>
+            <div class="product-context-grid">
+                <div class="product-context-field">
+                    <label>Description</label>
+                    <span th:text="${claimHistoryDto.productDescription}"></span>
+                </div>
+                <div class="product-context-field">
+                    <label>Serial #</label>
+                    <span th:text="${claimHistoryDto.productSerialNumber}"></span>
+                </div>
+                <div class="product-context-field">
+                    <label>Warranty Ends</label>
+                    <span th:text="${claimHistoryDto.warrantyEndDate}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="claim-panel">
+            <div class="claim-panel-header">
+                <span class="claim-panel-label">// claim</span>
+                <span class="status-badge" th:classappend="${claimHistoryDto.claimStatus.name().toLowerCase()}"
+                    th:text="${claimHistoryDto.claimStatus}"></span>
+            </div>
+            <div class="claim-meta claim-meta--wide">
+                <div class="claim-meta-field">
+                    <label>Submitted</label>
+                    <span th:text="${claimHistoryDto.dateClaimFiled}"></span>
+                </div>
+                <div class="claim-meta-field">
+                    <label>Fault Description</label>
+                    <span th:text="${claimHistoryDto.faultDescription}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">// audit log</div>
+
+        <div class="table-wrapper" th:if="${!#lists.isEmpty(claimHistoryDto.auditResponse.auditEntries)}">
+            <table class="history-table data-table">
+                <thead>
+                    <tr>
+                        <th>Changed At</th>
+                        <th>Status Transition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${claimHistoryDto.auditResponse.auditEntries}">
+                        <td class="col-timestamp"
+                            th:text="${#temporals.format(entry.changedAt, 'dd MMM yyyy, HH:mm')}"></td>
+                        <td class="col-transition">
+                            <div class="status-transition">
+                                <span class="status-badge"
+                                    th:classappend="${#strings.toLowerCase(entry.previousStatus)}"
+                                    th:text="${entry.previousStatus}"></span>
+                                <span class="transition-arrow">→</span>
+                                <span class="status-badge" th:classappend="${#strings.toLowerCase(entry.newStatus)}"
+                                    th:text="${entry.newStatus}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(claimHistoryDto.auditResponse.auditEntries)}">
+            <p>No status changes have been recorded for this claim yet.</p>
+            <p class="empty-hint">Entries appear automatically when a claim status is updated via Edit Claim.</p>
+        </div>
+
+        <div class="footer-actions">
+            <a th:href="@{/products/{productId}/claims/{claimId}/edit(productId=${productId}, claimId=${claimId})}">Edit
+                this claim →</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
