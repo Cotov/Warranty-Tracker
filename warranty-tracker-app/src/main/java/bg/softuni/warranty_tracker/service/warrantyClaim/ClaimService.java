@@ -25,11 +25,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.constant.LogMessages;
-import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
-import bg.softuni.warranty_tracker.customExceptions.DataMapException;
-import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionException;
-import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
-import bg.softuni.warranty_tracker.customExceptions.UserException;
+import bg.softuni.warranty_tracker.customExceptions.claim.InvalidStatusTransitionException;
+import bg.softuni.warranty_tracker.customExceptions.common.BadRequestException;
+import bg.softuni.warranty_tracker.customExceptions.common.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.product.ActiveClaimException;
+import bg.softuni.warranty_tracker.customExceptions.user.UserException;
 import bg.softuni.warranty_tracker.mapper.warrantyClaim.ClaimMapper;
 import bg.softuni.warranty_tracker.service.audit.AuditService;
 
@@ -53,12 +53,12 @@ public class ClaimService {
     @Transactional
     public void addClaim(AddClaimRequest addClaimRequest, UserDto userDto) {
         if (addClaimRequest == null || addClaimRequest.getProduct() == null) {
-            throw new DataMapException(ExceptionMessages.ADD_CLAIM_FAILED);
+            throw new BadRequestException(ExceptionMessages.ADD_CLAIM_FAILED);
         }
 
         UUID productId = addClaimRequest.getProduct().getId();
         if (userDto.getId() != addClaimRequest.getProduct().getUser().getId()) {
-            throw new UserException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
+            throw new UserException(ExceptionMessages.USER_FORBIDDEN);
         }
         List<ClaimDto> claimDtos = getClaims(productId.toString(),
                 addClaimRequest.getProduct().getUser());
@@ -95,7 +95,7 @@ public class ClaimService {
     @Transactional
     public void updateClaim(EditClaimRequest editClaimRequest, UserDto userDto) {
         if (editClaimRequest == null || userDto == null) {
-            throw new DataMapException(ExceptionMessages.UPDATE_CLAIM_FAILED);
+            throw new BadRequestException(ExceptionMessages.UPDATE_CLAIM_FAILED);
         }
         Claim claim = claimRepository.findById(editClaimRequest.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.CLAIM_NOT_FOUND));

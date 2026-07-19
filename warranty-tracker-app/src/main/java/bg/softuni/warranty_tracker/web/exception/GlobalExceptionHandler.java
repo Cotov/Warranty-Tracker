@@ -6,88 +6,34 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
-import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
-import bg.softuni.warranty_tracker.customExceptions.DataMapException;
-import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
-import bg.softuni.warranty_tracker.customExceptions.InvalidSessionException;
-import bg.softuni.warranty_tracker.customExceptions.InvalidStatusTransitionException;
-import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
-import bg.softuni.warranty_tracker.customExceptions.UserException;
+import bg.softuni.warranty_tracker.customExceptions.BaseApplicationException;
+import lombok.extern.slf4j.Slf4j;
 
 //todo flash attributes and rest api error handling
 //rest api errorResponse DTO
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(DuplicateEntityException.class)
-    public ModelAndView handleConflict(DuplicateEntityException exception) {
+    @ExceptionHandler(BaseApplicationException.class)
+    public ModelAndView handleBaseApplicationException(BaseApplicationException exception) {
         ModelAndView modelAndView = new ModelAndView();
+        log.error("Exception: {}", exception.getMessage());
         modelAndView.setViewName("error/error");
         modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.CONFLICT.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ModelAndView handleNotFound(ObjectNotFoundException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.NOT_FOUND.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(ActiveClaimException.class)
-    public ModelAndView handleActiveClaim(ActiveClaimException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(InvalidSessionException.class)
-    public ModelAndView handleInvalidSession(InvalidSessionException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.UNAUTHORIZED.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(DataMapException.class)
-    public ModelAndView handleDataMap(DataMapException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(UserException.class)
-    public ModelAndView handleUser(UserException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.UNAUTHORIZED.value());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(InvalidStatusTransitionException.class)
-    public ModelAndView handleInvalidStatusTransition(InvalidStatusTransitionException exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error/error");
-        modelAndView.addObject("errorMessage", exception.getMessage());
-        modelAndView.addObject("statusCode", HttpStatus.BAD_REQUEST.value());
+        modelAndView.addObject("statusCode", exception.getStatusCode().value());
+        modelAndView.setStatus(exception.getStatusCode());
         return modelAndView;
     }
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(Exception exception) {
         ModelAndView modelAndView = new ModelAndView();
+        log.error("Exception: {}", exception.getMessage());
         modelAndView.setViewName("error/error");
         modelAndView.addObject("errorMessage", ExceptionMessages.SOMETHING_WENT_WRONG);
         modelAndView.addObject("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return modelAndView;
     }
 }

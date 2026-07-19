@@ -26,9 +26,9 @@ import bg.softuni.warranty_tracker.model.entity.user.User;
 import bg.softuni.warranty_tracker.model.entity.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import bg.softuni.warranty_tracker.constant.LogMessages;
-import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
-import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
-import bg.softuni.warranty_tracker.customExceptions.UserException;
+import bg.softuni.warranty_tracker.customExceptions.common.DuplicateEntityException;
+import bg.softuni.warranty_tracker.customExceptions.common.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.user.UserException;
 
 @Slf4j
 @Service
