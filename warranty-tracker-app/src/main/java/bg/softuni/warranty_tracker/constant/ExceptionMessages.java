@@ -9,7 +9,7 @@ public class ExceptionMessages {
     public static final String VENDOR_NOT_FOUND = "Vendor not found";
     public static final String VENDOR_CREATION_FAILED = "Create vendor failed";
     public static final String VENDOR_RESOLUTION_FAILED = "Vendor resolution failed";
-    public static final String VENDOR_AND_SESSION_USER_MISMATCH = "This vendor does not belong to the session user. Vednor id: %s ; User id: %s";
+    public static final String VENDOR_AND_SESSION_USER_MISMATCH = "This vendor does not belong to the session user. Vendor id: %s ; User id: %s";
     public static final String USER_FORBIDDEN = "You are not authorized to access this resource";
     public static final String PRODUCT_NOT_FOUND = "Product not found";
     public static final String PRODUCT_FORM_NULL = "ProductForm object was null";
