@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import bg.softuni.warranty_tracker.client.audit.AuditClient;
+import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.constant.LogMessages;
+import bg.softuni.warranty_tracker.customExceptions.claim.audit.CreateAuditEntryException;
+import bg.softuni.warranty_tracker.customExceptions.claim.audit.DeleteAuditEntriesException;
+import bg.softuni.warranty_tracker.customExceptions.claim.audit.GetAuditException;
 import bg.softuni.warranty_tracker.mapper.audit.AuditMapper;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.CreateAuditEntryRequest;
 import bg.softuni.warranty_tracker.model.dto.warrantyClaim.audit.CreateAuditEntryResponse;
@@ -35,7 +39,7 @@ public class AuditService {
             return response.getBody();
         } catch (FeignException e) {
             log.error("Failed to fetch audit entries for claim ID: {}", claimId, e);
-            throw new RuntimeException("Failed to fetch audit entries", e); // todo: create custom exception
+            throw new GetAuditException(ExceptionMessages.FAILED_TO_FETCH_AUDIT_ENTRIES);
         }
     }
 
@@ -44,19 +48,23 @@ public class AuditService {
             auditClient.deleteAuditEntries(claimId, apiKey);
             log.info(LogMessages.AUDIT_ENTRIES_DELETED_SUCCESSFULLY, claimId);
         } catch (FeignException e) {
-            log.error("Failed to delete audit entries for claim ID: {}", claimId, e);
-            throw new RuntimeException("Failed to delete audit entries", e); // todo: create custom exception
+            throw new DeleteAuditEntriesException(
+                    String.format(ExceptionMessages.FAILED_TO_DELETE_AUDIT_ENTRIES, claimId));
         }
     }
 
     public void createAuditEntry(UUID claimId, ClaimStatus previousStatus, ClaimStatus newStatus) {
+        ResponseEntity<CreateAuditEntryResponse> response = null;
         try {
             CreateAuditEntryRequest request = auditMapper.toCreateAuditEntryRequest(claimId, previousStatus, newStatus);
-            ResponseEntity<CreateAuditEntryResponse> response = auditClient.createAuditEntry(request, apiKey);
+            response = auditClient.createAuditEntry(request, apiKey);
             log.info(LogMessages.AUDIT_ENTRY_CREATED_SUCCESSFULLY, response.getBody().getAuditEntryId());
         } catch (FeignException e) {
-            log.error("Failed to create audit entry for claim ID: {}", claimId, e);
-            throw new RuntimeException("Failed to create audit entry", e); // todo: create custom exception
+            log.error("Failed to create audit entry for claim ID: {}", claimId, e, response.getBody(),
+                    response.getStatusCode());
+            throw new CreateAuditEntryException(String.format(ExceptionMessages.FAILED_TO_CREATE_AUDIT_ENTRY,
+                    response.getBody(), response.getStatusCode()));
+
         }
     }
 

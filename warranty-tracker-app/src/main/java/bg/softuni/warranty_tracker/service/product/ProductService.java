@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.annotation.Lazy;
 import bg.softuni.warranty_tracker.constant.Constants;
 import bg.softuni.warranty_tracker.constant.LogMessages;
-import bg.softuni.warranty_tracker.customExceptions.ActiveClaimException;
-import bg.softuni.warranty_tracker.customExceptions.DataMapException;
-import bg.softuni.warranty_tracker.customExceptions.DuplicateEntityException;
-import bg.softuni.warranty_tracker.customExceptions.InvalidSessionException;
-import bg.softuni.warranty_tracker.customExceptions.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.common.BadRequestException;
+import bg.softuni.warranty_tracker.customExceptions.common.DuplicateEntityException;
+import bg.softuni.warranty_tracker.customExceptions.common.ObjectNotFoundException;
+import bg.softuni.warranty_tracker.customExceptions.product.ActiveClaimException;
+import bg.softuni.warranty_tracker.customExceptions.user.UserForbiddenException;
 import bg.softuni.warranty_tracker.constant.ExceptionMessages;
 import bg.softuni.warranty_tracker.mapper.product.ProductMapper;
 import bg.softuni.warranty_tracker.mapper.user.UserMapper;
@@ -60,7 +60,7 @@ public class ProductService {
     public ProductDto registerProduct(RegisterProductRequest registerProductRequest, UserDto userDto) {
 
         if (registerProductRequest == null || userDto == null) {
-            throw new DataMapException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
+            throw new BadRequestException(ExceptionMessages.REGISTER_PRODUCT_FAILED);
         }
 
         if (productRepository.findBySerialNumberAndUserId(registerProductRequest.getSerialNumber(), userDto.getId()).isPresent()) {
@@ -77,7 +77,7 @@ public class ProductService {
     @Transactional
     public void updateProduct(EditProductRequest editProductRequest, UserDto userDto) {
         if (editProductRequest == null || userDto == null) {
-            throw new DataMapException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
+            throw new BadRequestException(ExceptionMessages.UPDATE_PRODUCT_FAILED);
         }
         Product existingProduct = productRepository.findById(editProductRequest.getId())
                 .orElseThrow(() -> new ObjectNotFoundException(ExceptionMessages.PRODUCT_NOT_FOUND));
@@ -130,7 +130,7 @@ public class ProductService {
             UUID vendorUuid;
             try {
                 vendorUuid = UUID.fromString(registerProductRequest.getVendorId());
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 throw new ObjectNotFoundException(ExceptionMessages.VENDOR_NOT_FOUND);
             }
             vendorDto = vendorService.getVendorByIdAndUserId(vendorUuid, userDto);
@@ -150,7 +150,7 @@ public class ProductService {
             UUID vendorUuid;
             try {
                 vendorUuid = UUID.fromString(editProductRequest.getVendorId());
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 throw new ObjectNotFoundException(ExceptionMessages.VENDOR_NOT_FOUND);
             }
             vendorDto = vendorService.getVendorByIdAndUserId(vendorUuid, userDto);
@@ -159,12 +159,11 @@ public class ProductService {
     }
 
     // helpers
-    // todo refactor to use UUID
     public void verifyProductUser(Product product, UUID userId) {
         if (product == null) {
             throw new ObjectNotFoundException(ExceptionMessages.PRODUCT_NOT_FOUND);
         } else if (!userId.equals(product.getUser().getId())) {
-            throw new InvalidSessionException(ExceptionMessages.SESSION_AND_USER_MISMATCH);
+            throw new UserForbiddenException(ExceptionMessages.USER_FORBIDDEN);
         }
     }
 
@@ -184,7 +183,7 @@ public class ProductService {
     public EditProductRequest getEditProductRequest(ProductDto productDto) {
         EditProductRequest editProductRequest = productMapper.toEditProductRequest(productDto);
         if (editProductRequest == null) {
-            throw new DataMapException(ExceptionMessages.FAILED_TO_MAP_PRODUCT_TO_EDIT_REQUEST);
+            throw new BadRequestException(ExceptionMessages.PRODUCT_EDIT_REQUEST_FAILED);
         }
         editProductRequest.setRegisterVendorRequest(new RegisterVendorRequest());
         return editProductRequest;
